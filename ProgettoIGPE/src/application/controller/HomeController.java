@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 import application.LevelsPage;
@@ -43,28 +44,27 @@ public class HomeController extends MouseAdapter {
 		/******aggiungere il click sulla finestra settings******/
 		if (e.getSource() == settings) {
 			SettingsPage sp = new SettingsPage();
-			
 		}
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		if (e.getSource() == start)
-			ImageLoader.initStartButton(start, 1);
+			ImageLoader.getIstance().initStartButton(start, 1);
 		else if (e.getSource() == settings)
-			ImageLoader.initSettingButton(settings, 1);
+			ImageLoader.getIstance().initSettingButton(settings, 1);
 		else if (e.getSource() == exit) 
-			ImageLoader.initExitButton(exit, 1);
+			ImageLoader.getIstance().initExitButton(exit, 1);
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		if (e.getSource() == start)
-			ImageLoader.initStartButton(start, 0);
+			ImageLoader.getIstance().initStartButton(start, 0);
 		if (e.getSource() == settings)
-			ImageLoader.initSettingButton(settings, 0);
+			ImageLoader.getIstance().initSettingButton(settings, 0);
 		if (e.getSource() == exit)
-			ImageLoader.initExitButton(exit, 0);
+			ImageLoader.getIstance().initExitButton(exit, 0);
 	}
 
 }

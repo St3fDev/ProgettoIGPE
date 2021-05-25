@@ -1,10 +1,10 @@
 package application.model;
 
-public class Paddle {
-	
+public class Ball {
 	int x;
 	int y;
-	int speed;
+	int dirX;
+	int dirY;
 	
 	public int getX() {
 		return x;
@@ -13,5 +13,4 @@ public class Paddle {
 	public int getY() {
 		return y;
 	}
-	
 }

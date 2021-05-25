@@ -23,9 +23,9 @@ public class HomePagePanel extends JPanel {
 		startButton = new JButton();
 		settingsButton = new JButton();
 		exitButton = new JButton();
-		ImageLoader.initStartButton(startButton, 0);
-		ImageLoader.initSettingButton(settingsButton, 0);
-		ImageLoader.initExitButton(exitButton, 0);
+		ImageLoader.getIstance().initStartButton(startButton, 0);
+		ImageLoader.getIstance().initSettingButton(settingsButton, 0);
+		ImageLoader.getIstance().initExitButton(exitButton, 0);
 		
 		this.add(exitButton);
 		this.add(settingsButton);
@@ -37,7 +37,7 @@ public class HomePagePanel extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		try {
-			background = ImageIO.read(getClass().getResourceAsStream("/application/resources/start.jpeg"));
+			background = ImageIO.read(getClass().getResourceAsStream("/application/resources/backgrounds/start.jpeg"));
 			g.drawImage(background, 0, 0, null);
 		} catch (IOException e) {
 			e.printStackTrace();

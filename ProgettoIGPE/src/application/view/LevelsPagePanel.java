@@ -15,20 +15,20 @@ public class LevelsPagePanel extends JPanel {
 	private static final long serialVersionUID = 8374418925237195039L;
 
 	Image background;
-	HashMap<JButton, Boolean> levels;
+	HashMap<Boolean, JButton> levels;
 	
 	
 	public LevelsPagePanel() {
-		levels = new HashMap<JButton, Boolean>();
+		levels = new HashMap<Boolean, JButton>();
 		int k = 0;
 		for (int i = 0; i < 9; i++) {
 				JButton level = new JButton();
-				ImageLoader.initLevelsButton(level, 141,k + i * 82 + 130, i);
+				ImageLoader.getIstance().initLevelsButton(level, 141,k + i * 82 + 130, i);
 				this.add(level);
 				if (i == 0) 
-					levels.put(level, true);
+					levels.put(true, level);
 				else
-					levels.put(level, false);
+					levels.put(false, level);
 				k += 10;
 		}
 		this.setLayout(null);
@@ -38,14 +38,14 @@ public class LevelsPagePanel extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		try {
-			background = ImageIO.read(getClass().getResourceAsStream("/application/resources/levels.png"));
+			background = ImageIO.read(getClass().getResourceAsStream("/application/resources/backgrounds/levels.png"));
 			g.drawImage(background, 0, 0, null);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public HashMap<JButton, Boolean> getLevels() {
+	public HashMap<Boolean,JButton> getLevels() {
 		return levels;
 	}
 	

@@ -3,6 +3,7 @@ package application.view;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 
+import application.config.Utility;
 import application.model.Game;
 
 public class GamePanel extends JPanel {
@@ -22,7 +23,9 @@ public class GamePanel extends JPanel {
 		int x_ball = Game.getInstance().getBall().getX();
 		int y_ball = Game.getInstance().getBall().getY();
 		g.drawImage(ball.img, x_ball, y_ball, ball.dimX, ball.dimY, null);
-	}
+		g.drawRect(x_paddle, y_paddle, Utility.DIM_X_PADDLE,Utility.DIM_Y_PADDLE);
+		g.drawRect(x_ball,y_ball, Utility.DIM_BALL,Utility.DIM_BALL);
+		}
 
 	public void update() {
 		repaint();

@@ -14,8 +14,8 @@ public class BallView {
 	int dimY;
 	
 	public BallView() {
-		dimX = Utility.DIM_X_BALL;
-		dimY = Utility.DIM_Y_BALL;
+		dimX = Utility.DIM_BALL;
+		dimY = Utility.DIM_BALL;
 		try {
 			img = ImageIO.read(getClass().getResourceAsStream("/application/resources/ball.png"));
 		} catch (IOException e) {

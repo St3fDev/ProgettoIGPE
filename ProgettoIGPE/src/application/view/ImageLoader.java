@@ -49,7 +49,7 @@ public class ImageLoader {
 		else if (pos == 1)
 			exit = new ImageIcon(getClass().getResource("/application/resources/home/exitButton2.png").getPath());
 		e.setIcon(exit);
-		e.setBounds(307,870,179,82);
+		e.setBounds(307,810,179,82);
 		e.setFocusable(false);
 		e.setOpaque(false);
 		e.setBorder(BorderFactory.createEmptyBorder());

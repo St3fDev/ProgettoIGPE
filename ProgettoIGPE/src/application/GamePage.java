@@ -2,7 +2,7 @@ package application;
 
 import javax.swing.JFrame;
 
-import application.config.Utility;
+import application.config.Utilities;
 import application.controller.GameController;
 import application.view.GamePanel;
 
@@ -11,7 +11,7 @@ public class GamePage {
 	JFrame gamePage = new JFrame();
 	
 	public GamePage() {
-				
+		/********* 0 temporaneo ************/
 		GamePanel gp = new GamePanel();
 		GameController controller = new GameController(gp);
 		
@@ -21,7 +21,7 @@ public class GamePage {
 		gamePage.setUndecorated(true);
 		gamePage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gamePage.setResizable(false);
-		gamePage.setSize(Utility.WIDTH_SIZE, Utility.HEIGHT_SIZE);
+		gamePage.setSize(Utilities.WIDTH_SIZE, Utilities.HEIGHT_SIZE);
 		gamePage.setLocation(Main.getJFrame().getLocation());
 		gamePage.setVisible(true);
 		GameLoop gameLoop = new GameLoop(controller);

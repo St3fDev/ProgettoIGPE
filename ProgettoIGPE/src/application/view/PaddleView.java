@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import application.config.Utility;
+import application.config.Utilities;
 import application.model.Game;
 
 public class PaddleView {
@@ -16,10 +16,10 @@ public class PaddleView {
 	int dimY;
 	
 	public PaddleView() {
-		dimX = Utility.DIM_X_PADDLE;
-		dimY = Utility.DIM_Y_PADDLE;
+		dimX = Utilities.DIM_X_PADDLE;
+		dimY = Utilities.DIM_Y_PADDLE;
 		try {
-			img = ImageIO.read(getClass().getResourceAsStream("/application/resources/paddle.png"));
+			img = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/paddle.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

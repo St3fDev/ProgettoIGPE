@@ -22,6 +22,7 @@ public class LevelsPagePanel extends JPanel {
 		int k = 0;
 		for (int i = 0; i < 9; i++) {
 			JButton level = new JButton();
+			HashMap<Boolean, JButton> tmp = new HashMap<Boolean, JButton>();
 			ImageLoader.getIstance().initLevelsButton(level, 141, k + i * 76 + 130, i);
 			this.add(level);
 			if (i == 0)

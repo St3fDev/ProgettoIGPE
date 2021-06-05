@@ -2,7 +2,7 @@ package application;
 
 import javax.swing.JFrame;
 
-import application.config.Utility;
+import application.config.Utilities;
 import application.controller.LevelsController;
 import application.view.LevelsPagePanel;
 
@@ -21,7 +21,7 @@ public class LevelsPage {
 		levels.setUndecorated(true);
 		levels.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		levels.setResizable(false);
-		levels.setSize(Utility.WIDTH_SIZE, Utility.HEIGHT_SIZE);
+		levels.setSize(Utilities.WIDTH_SIZE, Utilities.HEIGHT_SIZE);
 		levels.setVisible(true);
 
 	}

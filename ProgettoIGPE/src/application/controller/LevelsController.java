@@ -9,7 +9,7 @@ import javax.swing.JFrame;
 
 import application.GamePage;
 import application.LevelsPage;
-import application.config.Utility;
+import application.config.Utilities;
 import application.view.LevelsPagePanel;
 
 public class LevelsController extends MouseAdapter {

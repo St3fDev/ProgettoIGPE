@@ -2,7 +2,7 @@ package application.model;
 
 import java.awt.Rectangle;
 
-import application.config.Utility;
+import application.config.Utilities;
 
 public class Ball {
 	int x;
@@ -19,6 +19,6 @@ public class Ball {
 	}
 	
 	public Rectangle getRect() {
-		return new Rectangle(x, y, Utility.DIM_BALL, Utility.DIM_BALL);
+		return new Rectangle(x, y, Utilities.DIM_BALL, Utilities.DIM_BALL);
 	}
 }

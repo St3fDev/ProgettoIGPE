@@ -2,7 +2,7 @@ package application;
 
 import javax.swing.JFrame;
 
-import application.config.Utility;
+import application.config.Utilities;
 import application.controller.HomeController;
 import application.view.HomePagePanel;
 
@@ -13,7 +13,7 @@ public class Main {
 	public static void main(String[] args) {
 		startPage = new JFrame();
 
-		startPage.setSize(Utility.WIDTH_SIZE, Utility.HEIGHT_SIZE);
+		startPage.setSize(Utilities.WIDTH_SIZE, Utilities.HEIGHT_SIZE);
 		HomePagePanel start = new HomePagePanel();
 		HomeController home = new HomeController(start);
 

@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import application.config.Utility;
+import application.config.Utilities;
 
 public class BallView {
 	
@@ -14,10 +14,10 @@ public class BallView {
 	int dimY;
 	
 	public BallView() {
-		dimX = Utility.DIM_BALL;
-		dimY = Utility.DIM_BALL;
+		dimX = Utilities.DIM_BALL;
+		dimY = Utilities.DIM_BALL;
 		try {
-			img = ImageIO.read(getClass().getResourceAsStream("/application/resources/ball.png"));
+			img = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/ball.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

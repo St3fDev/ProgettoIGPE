@@ -8,9 +8,11 @@ import application.view.Maps;
 public class Game {
 
 	private static Game game = null;
+	private static boolean pause;
 	private Paddle paddle;
 	private Ball ball;
 	private Brick[] bricks = null;
+	private static int level;
 
 	public static Game getInstance() {
 		if (game == null)
@@ -29,47 +31,54 @@ public class Game {
 		ball.y = Utilities.HEIGHT_SIZE - 175;
 		ball.dirX = -1;
 		ball.dirY = -1;
-
+		pause = false;
 		bricks = new Brick[42];
-		showCurrentLevel(Maps.getIstance().ReadMap(0));
+	}
+	
+	public void showLevel() {
+		showCurrentLevel(Maps.getIstance().ReadMap(getLevel()));
 	}
 
 	public void movePaddle(int direction) {
-		switch (direction) {
-		case 0:
-			if (paddle.x + paddle.speed <= Utilities.WIDTH_SIZE - Utilities.DIM_X_PADDLE)
-				paddle.x += paddle.speed;
-			break;
-		case 1:
-			if (paddle.x - paddle.speed >= 0)
-				paddle.x -= paddle.speed;
-			break;
-		default:
-			return;
+		if (!pause) {
+			switch (direction) {
+			case 0:
+				if (paddle.x + paddle.speed <= Utilities.WIDTH_SIZE - Utilities.DIM_X_PADDLE)
+					paddle.x += paddle.speed;
+				break;
+			case 1:
+				if (paddle.x - paddle.speed >= 0)
+					paddle.x -= paddle.speed;
+				break;
+			default:
+				return;
+			}
 		}
 	}
 
 	public void updateBall() {
-		if ((ball.x <= 0 && ball.dirX < 0) || (ball.x + Utilities.DIM_BALL >= Utilities.WIDTH_SIZE && ball.dirX > 0))
-			ball.dirX = -ball.dirX;
-		if ((ball.y <= 0 && ball.dirY < 0) || (ball.y + Utilities.DIM_BALL >= Utilities.HEIGHT_SIZE && ball.dirY > 0))
-			ball.dirY = -ball.dirY;
-		if (ball.y <= 0 && ball.dirX == 0)
-			ball.dirX = -1;
-		int cont = 0;
-		checkCollision();
-		while (cont != 8) {
-			ball.x += ball.dirX;
-			ball.y += ball.dirY;
-			cont++;
+		if (!pause) {
+			if ((ball.x <= 0 && ball.dirX < 0)
+					|| (ball.x + Utilities.DIM_BALL >= Utilities.WIDTH_SIZE && ball.dirX > 0))
+				ball.dirX = -ball.dirX;
+			if ((ball.y <= 0 && ball.dirY < 0)
+					|| (ball.y + Utilities.DIM_BALL >= Utilities.HEIGHT_SIZE && ball.dirY > 0))
+				ball.dirY = -ball.dirY;
+			if (ball.y <= 0 && ball.dirX == 0)
+				ball.dirX = -1;
+			ballCollision();
+			int cont = 0;
+			while (cont != 8) {
+				ball.x += ball.dirX;
+				ball.y += ball.dirY;
+				cont++;
+			}
 		}
 	}
 
-	public void checkCollision() {
-
+	public void ballCollision() {
 		paddleCollision();
 		brickCollision();
-
 	}
 
 	private void paddleCollision() {
@@ -172,4 +181,19 @@ public class Game {
 		return ball;
 	}
 
+	public void setPause(boolean p) {
+		pause = p;
+	}
+	
+	public boolean getPause() {
+		return pause;
+	}
+	
+	public void setLevel(int lvl) {
+		level = lvl;
+	}
+	
+	private int getLevel() {
+		return level;
+	}
 }

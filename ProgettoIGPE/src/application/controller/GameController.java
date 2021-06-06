@@ -13,35 +13,29 @@ public class GameController implements KeyListener {
 
 	private GamePanel gp;
 	Game game = Game.getInstance();
-	private Boolean pause;
 	
 	public GameController(GamePanel gp) {
 		this.gp = gp;
-		pause = false;
 	}
 	
 	public void update() {
-		if (!pause) {
 		gp.update();
 		game.updateBall();
-		}
 	}
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			Game game = Game.getInstance();
-			game.movePaddle(1);
+			Game.getInstance().movePaddle(1);
 		}
 		else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			Game game = Game.getInstance();
-			game.movePaddle(0);
+			Game.getInstance().movePaddle(0);
 		}
 		else if (e.getKeyCode() == KeyEvent.VK_P) {
-			if (!pause) 
-				pause = true;
+			if (Game.getInstance().getPause())
+				Game.getInstance().setPause(false);
 			else 
-				pause = false;
+				Game.getInstance().setPause(true);
 		}
 	}
 	

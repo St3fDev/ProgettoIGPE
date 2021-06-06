@@ -9,41 +9,40 @@ import javax.swing.JFrame;
 
 import application.GamePage;
 import application.LevelsPage;
-import application.config.Utilities;
+import application.view.LevelLocked;
 import application.view.LevelsPagePanel;
 
 public class LevelsController extends MouseAdapter {
-	
+
 	private LevelsPagePanel levelsPage;
-	HashMap<Boolean, JButton> levels; 
-	
+	HashMap<Integer, JButton> levels;
+
 	public LevelsController(LevelsPagePanel levelsPage) {
 		this.levelsPage = levelsPage;
 		levels = levelsPage.getLevels();
-		for (Boolean e: levels.keySet()) {
-			JButton b = levels.get(e);
-			b.addMouseListener(this);
+		for(int i: levels.keySet()) {
+			levels.get(i).addMouseListener(this);
 		}
-	}
-	
-	@Override
-	public void mouseClicked(MouseEvent e) {
-	//************ DA MODIFICARE **************//
-		if (e.getSource() == levels.get(true)) {
-			JFrame f = LevelsPage.getJFrame();
-			f.dispose();
-			GamePage gp = new GamePage();
-		}
-	}
-	
-	@Override
-	public void mouseEntered(MouseEvent e) {
-	
 	}
 
 	@Override
-	public void mouseExited(MouseEvent e) {
-		
+	public void mouseClicked(MouseEvent e) {
+		for (int i: levels.keySet()) {
+			if (e.getSource() == levels.get(i)) {
+				boolean unlock = LevelLocked.getIstance().readLevel(i);
+				if (unlock) {
+					JFrame f = LevelsPage.getJFrame();
+					f.dispose();
+					GamePage gp = new GamePage(i);	
+				}
+			}
+		}
 	}
-	
+
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+
+	@Override
+	public void mouseExited(MouseEvent e) {}
+
 }

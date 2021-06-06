@@ -4,17 +4,18 @@ import javax.swing.JFrame;
 
 import application.config.Utilities;
 import application.controller.GameController;
+import application.model.Game;
 import application.view.GamePanel;
 
 public class GamePage {
 	
 	JFrame gamePage = new JFrame();
 	
-	public GamePage() {
-		/********* 0 temporaneo ************/
+	public GamePage(int lvl) {
 		GamePanel gp = new GamePanel();
 		GameController controller = new GameController(gp);
-		
+		Game.getInstance().setLevel(lvl);
+		Game.getInstance().showLevel();
 		gp.addKeyListener(controller);
 		gp.setFocusable(true);
 		gamePage.add(gp);

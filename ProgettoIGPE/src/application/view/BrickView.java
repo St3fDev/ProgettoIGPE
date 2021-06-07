@@ -16,11 +16,11 @@ public class BrickView {
 	public BrickView() {
 		dimX = Utilities.DIM_X_BRICK;
 		dimY = Utilities.DIM_Y_BRICK;
-		try {
+		/*try {
 			img = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/muro (1).png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
 }

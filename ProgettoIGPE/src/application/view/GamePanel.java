@@ -10,7 +10,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import application.config.Utilities;
@@ -25,15 +24,9 @@ public class GamePanel extends JPanel {
 	private BallView ball = new BallView();
 	private BrickView brick = new BrickView();
 	private Image background = null;
-
-	public GamePanel() {
-		// qui setterò il background //
-		JLabel lives = new JLabel("Lives:");
-		lives.setBounds(10, 850, 60, 20);
-		lives.setFont(new Font("Helvetica Neue", Font.PLAIN, 15));
-		this.add(lives);
-		this.setLayout(null);
-	}
+	private boolean game = true;
+	//private CardLayout card = new CardLayout();
+	//private JPanel pauseGame = new JPanel();
 
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -43,29 +36,69 @@ public class GamePanel extends JPanel {
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		
+		if (game) {
+			inGame(g2d);
+		} else {
+			gameOver(g2d);
+		}
 		/*
 		 * background = ImageIO.read(getClass().getResourceAsStream(
 		 * "/application/resources/backgrounds/start.jpeg")); g.drawImage(background, 0,
 		 * 0, null);
 		 */
-		//GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			int x_paddle = Game.getInstance().getPaddle().getX();
-			int y_paddle = Game.getInstance().getPaddle().getY();
-			g.drawImage(paddle.img, x_paddle, y_paddle, paddle.dimX, paddle.dimY, null);
+		// GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		
+	}
+	
+	public void inGame(Graphics2D g2d) {
+		if (loseLives(g2d))
+			return;
+		int x_paddle = Game.getInstance().getPaddle().getX();
+		int y_paddle = Game.getInstance().getPaddle().getY();
+		g2d.drawImage(paddle.img, x_paddle, y_paddle, paddle.dimX, paddle.dimY, null);
 
-			int x_ball = Game.getInstance().getBall().getX();
-			int y_ball = Game.getInstance().getBall().getY();
-			g.drawImage(ball.img, x_ball, y_ball, ball.dimX, ball.dimY, null);
-			Brick[] bricks = Game.getInstance().getBrick();
-			for (int i = 0; i < bricks.length; i++) {
-				if (!bricks[i].getDestroyed()) {
-					g.fillRect(bricks[i].getX(), bricks[i].getY(), Utilities.DIM_X_BRICK, Utilities.DIM_Y_BRICK);
-					// g.drawImage(brick.img,bricks[i].getX(),bricks[i].getY(),
-					// brick.dimX,brick.dimY , null);
+		int x_ball = Game.getInstance().getBall().getX();
+		int y_ball = Game.getInstance().getBall().getY();
+		g2d.drawImage(ball.img, x_ball, y_ball, ball.dimX, ball.dimY, null);
+		
+		g2d.drawString("SCORE: " + Game.getInstance().getScore(),700,850);
+		Brick[] bricks = Game.getInstance().getBrick();
+		for (int i = 0; i < bricks.length; i++) {
+			if (!bricks[i].getDestroyed()) {
+				if (bricks[i].getResistance() == Utilities.BRICK_RES_1) {
+					g2d.fillRect(bricks[i].getX(), bricks[i].getY(), Utilities.DIM_X_BRICK, Utilities.DIM_Y_BRICK);
+					// g.drawImage(brick.img,bricks[i].getX(),bricks[i].getY(),brick.dimX,brick.dimY , null);
+				}
+				else if (bricks[i].getResistance() == Utilities.BRICK_RES_2) {
+					g2d.fillRect(bricks[i].getX(), bricks[i].getY(), Utilities.DIM_X_BRICK, Utilities.DIM_Y_BRICK);
+				} else {
+					g2d.fillRect(bricks[i].getX(), bricks[i].getY(), Utilities.DIM_X_BRICK, Utilities.DIM_Y_BRICK);
 				}
 			}
+		}
 	}
 
+	public void gameOver(Graphics2D g2d) {
+		// DA SETTARE FONT, DIMENSIONE, 
+		g2d.drawString(Utilities.GAME_OVER, 400, 300);
+	}
+	
+	public boolean loseLives(Graphics2D g2d) {
+		int lives = Game.getInstance().getLives();
+		if (lives == 0) {
+			game = false;
+			return true;
+		}
+		int cont = 0;
+		while (lives > 0) {
+			g2d.drawImage(ball.img,50 + cont,850,20,20,null);
+			cont += 25;
+			lives--;
+		}
+		return false;
+	}
+	
 	public void update() {
 		repaint();
 	}

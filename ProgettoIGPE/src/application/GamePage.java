@@ -1,6 +1,7 @@
 package application;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import application.config.Utilities;
 import application.controller.GameController;

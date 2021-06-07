@@ -27,9 +27,11 @@ public class GameController implements KeyListener {
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			Game.getInstance().movePaddle(1);
+			Game.getInstance().setPause(false);
 		}
 		else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			Game.getInstance().movePaddle(0);
+			Game.getInstance().setPause(false);
 		}
 		else if (e.getKeyCode() == KeyEvent.VK_P) {
 			if (Game.getInstance().getPause())

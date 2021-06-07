@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -15,11 +14,9 @@ public class LevelsPagePanel extends JPanel {
 	private static final long serialVersionUID = 8374418925237195039L;
 
 	Image background;
-	//HashMap<Boolean, JButton> levels;
 	HashMap<Integer, JButton> levels;
 	
 	public LevelsPagePanel() {
-		//levels = new HashMap<Boolean, JButton>();
 		levels = new HashMap<Integer, JButton>();
 		int k = 0;
 		for (int i = 0; i < 9; i++) {

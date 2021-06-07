@@ -5,7 +5,7 @@ import javax.swing.JFrame;
 public class SettingsPage {
 	
 	JFrame f;
-	
+
 	public SettingsPage() {
 		f = new JFrame();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

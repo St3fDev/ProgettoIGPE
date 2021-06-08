@@ -21,6 +21,7 @@ public class GameController implements KeyListener {
 	public void update() {
 		gp.update();
 		game.updateBall();
+		game.pwrCollision();
 	}
 	
 	@Override

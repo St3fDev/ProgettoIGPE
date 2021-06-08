@@ -7,6 +7,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -15,6 +16,7 @@ import javax.swing.JPanel;
 import application.config.Utilities;
 import application.model.Brick;
 import application.model.Game;
+import application.model.Powerups;
 
 public class GamePanel extends JPanel {
 
@@ -23,6 +25,7 @@ public class GamePanel extends JPanel {
 	private PaddleView paddle = new PaddleView();
 	private BallView ball = new BallView();
 	private BrickView brick = new BrickView();
+	private PowerupsView pwr = new PowerupsView();
 	private Image background = null;
 	private boolean game = true;
 	//private CardLayout card = new CardLayout();
@@ -63,19 +66,26 @@ public class GamePanel extends JPanel {
 		g2d.drawImage(ball.img, x_ball, y_ball, ball.dimX, ball.dimY, null);
 		
 		g2d.drawString("SCORE: " + Game.getInstance().getScore(),700,850);
-		Brick[] bricks = Game.getInstance().getBrick();
-		for (int i = 0; i < bricks.length; i++) {
-			if (!bricks[i].getDestroyed()) {
-				if (bricks[i].getResistance() == Utilities.BRICK_RES_1) {
-					g2d.fillRect(bricks[i].getX(), bricks[i].getY(), Utilities.DIM_X_BRICK, Utilities.DIM_Y_BRICK);
-					// g.drawImage(brick.img,bricks[i].getX(),bricks[i].getY(),brick.dimX,brick.dimY , null);
+		ArrayList<Brick> bricks = Game.getInstance().getBrick();
+		for (int i = 0; i < bricks.size(); i++) {
+			if (!bricks.get(i).getDestroyed()) {
+				if (bricks.get(i).getResistance() == Utilities.BRICK_RES_1) {
+					//g2d.fillRect(bricks[i].getX(), bricks[i].getY(), Utilities.DIM_X_BRICK, Utilities.DIM_Y_BRICK);
+					g2d.drawImage(brick.img3,bricks.get(i).getX(),bricks.get(i).getY(),brick.dimX,brick.dimY , null);
 				}
-				else if (bricks[i].getResistance() == Utilities.BRICK_RES_2) {
-					g2d.fillRect(bricks[i].getX(), bricks[i].getY(), Utilities.DIM_X_BRICK, Utilities.DIM_Y_BRICK);
+				else if (bricks.get(i).getResistance() == Utilities.BRICK_RES_2) {
+					if (bricks.get(i).getLivesBrick() == 2)
+						g2d.drawImage(brick.img,bricks.get(i).getX(),bricks.get(i).getY(),brick.dimX,brick.dimY , null);
+					if (bricks.get(i).getLivesBrick() == 1)
+						g2d.drawImage(brick.img2,bricks.get(i).getX(),bricks.get(i).getY(),brick.dimX,brick.dimY , null);
 				} else {
-					g2d.fillRect(bricks[i].getX(), bricks[i].getY(), Utilities.DIM_X_BRICK, Utilities.DIM_Y_BRICK);
+					g2d.fillRect(bricks.get(i).getX(), bricks.get(i).getY(), Utilities.DIM_X_BRICK, Utilities.DIM_Y_BRICK);
 				}
 			}
+		}
+		ArrayList<Powerups> pwr = Game.getInstance().getPwr();
+		for (int i = 0; i < pwr.size(); i++) {
+			g2d.fillRect(pwr.get(i).getX(), pwr.get(i).getY(), Utilities.DIM_PWR, Utilities.DIM_PWR);
 		}
 	}
 

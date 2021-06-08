@@ -1,6 +1,7 @@
 package application.model;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Random;
 
 import application.config.Utilities;
@@ -12,7 +13,9 @@ public class Game {
 	private boolean pause;
 	private Paddle paddle;
 	private Ball ball;
-	private Brick[] bricks = null;
+	//private Brick[] bricks = null;
+	private ArrayList<Brick> bricks;
+	private ArrayList<Powerups> pwr; 
 	private int level;
 	private int lives;
 	private int score;
@@ -38,7 +41,8 @@ public class Game {
 		ball.dirX = -1;
 		ball.dirY = -1;
 		pause = true;
-		bricks = new Brick[42];
+		bricks = new ArrayList<Brick>();
+		pwr = new ArrayList<Powerups>();
 		lives = 3;
 		score = 0;
 		pwr_life = false;
@@ -69,12 +73,10 @@ public class Game {
 
 	public void updateBall() {
 		int bricksBroken = 0;
-		for (int i = 0; i < 42; i++) {
-			if (bricks[i].getDestroyed())
+		for (int i = 0; i < bricks.size(); i++) {
+			if (bricks.get(i).getDestroyed())	
 				bricksBroken++;
 		}
-		if (bricksBroken == 42)
-			resetGame();
 		if (!pause) {
 			if ((ball.x <= 0 && ball.dirX < 0)
 					|| (ball.x + Utilities.DIM_BALL >= Utilities.WIDTH_SIZE && ball.dirX > 0))
@@ -145,8 +147,8 @@ public class Game {
 	}
 
 	private void brickCollision() {
-		for (int i = 0; i < 42; i++) {
-			if (ball.getRect().intersects(bricks[i].getRect())) {
+		for (int i = 0; i < bricks.size(); i++) {
+			if (ball.getRect().intersects(bricks.get(i).getRect())) {	
 				int ballLeft = (int) ball.getRect().getMinX();
 				int ballHeight = (int) ball.getRect().getHeight();
 				int ballWidth = (int) ball.getRect().getWidth();
@@ -154,34 +156,58 @@ public class Game {
 
 				Point pointRight = new Point(ballLeft + ballWidth + 1, ballTop);
 				Point pointLeft = new Point(ballLeft - 1, ballTop);
-				Point PointTop = new Point(ballLeft, ballTop - 1);
-				Point PointBottom = new Point(ballLeft, ballTop + ballHeight + 1);
-				// se utilizzavo anche ballRight e ballBottom in modo da gestire meglio le
-				// collisioni
-				// se due brick vicini avevano uno il pointRight e uno il pointLeft si crea una
-				// situazione in cui la dirX
-				// cambiava e ritornava come prima e il rimbalzo non avveniva
-				if (!bricks[i].getDestroyed()) {
+				Point pointTop = new Point(ballLeft, ballTop - 1);
+				Point pointBottom = new Point(ballLeft, ballTop + ballHeight + 1);
+				
+				if (!bricks.get(i).getDestroyed()) {
 					if (i % 2 == 0)
 						spawnPwr();
-					if (bricks[i].resistance == Utilities.BRICK_RES_1) {
-						bricks[i].setDestroyed(true);
+					
+					if (bricks.get(i).resistance == Utilities.BRICK_RES_1) {
+						bricks.get(i).setDestroyed(true);
 						score++;
 					}
-					bricks[i].resistance--;
-					if (bricks[i].getRect().contains(pointRight))
+					bricks.get(i).resistance--;
+					if (bricks.get(i).getRect().contains(pointRight))
 						ball.dirX = -1;
-					else if (bricks[i].getRect().contains(pointLeft))
+					else if (bricks.get(i).getRect().contains(pointLeft))
 						ball.dirX = 1;
-					if (bricks[i].getRect().contains(PointTop)) {
+					if (bricks.get(i).getRect().contains(pointTop))	{
 						if (ball.dirX == 0)
 							ball.dirX = -1;
 						ball.dirY = 1;
-					} else if (bricks[i].getRect().contains(PointBottom))
+					}
+					else if (bricks.get(i).getRect().contains(pointBottom))
 						ball.dirY = -1;
+					addPwr(bricks.get(i));
 				}
 			}
 		}
+	}
+	
+	public void addPwr(Brick b) {
+		if (pwr_3ball || pwr_fireball || pwr_life) {
+			Powerups p = new Powerups();
+			p.x = b.x;
+			p.y = b.y;
+			p.speed = 10;
+			pwr.add(p);
+		}
+	}
+	
+	public void pwrCollision() {
+		for (int i = 0; i < pwr.size(); i++) {
+			pwr.get(i).y += pwr.get(i).speed;
+			if (paddle.getRect().intersects(pwr.get(i).getRect())) {
+				/***********************aggiungere conseguenze collisione***********************/
+				pwr.remove(i);
+			}
+			else if (pwr.get(i).y > Utilities.LIMIT_LINE)
+				pwr.remove(i);
+		}
+		pwr_3ball = false;
+		pwr_fireball = false;
+		pwr_life = false;
 	}
 
 	public void showCurrentLevel(int[][] level) {
@@ -189,9 +215,10 @@ public class Game {
 		for (int i = 0; i < level.length; i++) {
 			for (int j = 0; j < level[i].length; j++) {
 				if (level[i][j] >= Utilities.BRICK_RES_1) {
-					bricks[k] = new Brick(j * Utilities.DIM_X_BRICK, i * Utilities.DIM_Y_BRICK);
-					bricks[k].resistance = level[i][j];
-					bricks[k].resistanceInit = level[i][j];
+					Brick b = new Brick(j * Utilities.DIM_X_BRICK, i * Utilities.DIM_Y_BRICK);
+					bricks.add(b);
+					bricks.get(k).resistance = level[i][j];
+					bricks.get(k).resistanceInit = level[i][j];
 					k++;
 				}
 			}
@@ -201,14 +228,12 @@ public class Game {
 	public void spawnPwr() {
 		Random r = new Random();
 		int rand = r.nextInt(100)+1;
-		if (rand <= 2) {
+		if (rand <= 2)
 			pwr_life = true;
-		}
 		else if (rand > 2 && rand <= 7)
 			pwr_3ball = true;
 		else if (rand > 8 && rand <= 12)
 			pwr_fireball = true;
-		System.out.println(rand);
 	}
 
 	public void resetGame() {
@@ -220,7 +245,7 @@ public class Game {
 		ball.dirY = -1;
 	}
 
-	public Brick[] getBrick() {
+	public ArrayList<Brick> getBrick() {
 		return bricks;
 	}
 
@@ -254,5 +279,21 @@ public class Game {
 	
 	public int getScore() {
 		return score;
+	}
+	
+	public void setPwrLife(boolean life) {
+		pwr_life = life;
+	}
+	
+	public void setPwr3Ball(boolean ball) {
+		pwr_3ball = ball;
+	}
+	
+	public void setPwrFireball(boolean fireball) {
+		pwr_fireball = fireball;
+	}
+	
+	public ArrayList<Powerups> getPwr() {
+		return pwr;
 	}
 }

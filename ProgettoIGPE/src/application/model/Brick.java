@@ -9,7 +9,7 @@ public class Brick {
 	int x;
 	int y; 
 	int resistance;
-	int resistanceInit;
+	int resistanceInit;  
 	Boolean destroyed;
 	
 	public Brick(int x, int y) {
@@ -32,6 +32,10 @@ public class Brick {
 	
 	public void setDestroyed(Boolean d) {
 		destroyed = d;
+	}
+	
+	public int getLivesBrick() {
+		return resistance;
 	}
 	
 	public int getResistance() {

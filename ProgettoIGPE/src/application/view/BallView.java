@@ -7,11 +7,9 @@ import javax.imageio.ImageIO;
 
 import application.config.Utilities;
 
-public class BallView {
+public class BallView extends Common {
 	
 	Image img;
-	int dimX;
-	int dimY;
 	
 	public BallView() {
 		dimX = Utilities.DIM_BALL;

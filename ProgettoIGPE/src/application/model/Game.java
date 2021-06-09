@@ -3,6 +3,8 @@ package application.model;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Timer;
+import java.util.concurrent.CountDownLatch;
 
 import application.config.Utilities;
 import application.view.Maps;
@@ -13,15 +15,13 @@ public class Game {
 	private boolean pause;
 	private Paddle paddle;
 	private Ball ball;
-	//private Brick[] bricks = null;
 	private ArrayList<Brick> bricks;
-	private ArrayList<Powerups> pwr; 
+	private ArrayList<Powerups> pwr;
+	private ArrayList<Boolean> pwrActivated;
+	private ArrayList<Integer> pwrDuration;
 	private int level;
 	private int lives;
 	private int score;
-	private boolean pwr_life;
-	private boolean pwr_3ball;
-	private boolean pwr_fireball;
 
 	public static Game getInstance() {
 		if (game == null)
@@ -43,11 +43,17 @@ public class Game {
 		pause = true;
 		bricks = new ArrayList<Brick>();
 		pwr = new ArrayList<Powerups>();
+		pwrActivated = new ArrayList<Boolean>();
+		pwrDuration = new ArrayList<Integer>();
 		lives = 3;
 		score = 0;
-		pwr_life = false;
-		pwr_3ball = false;
-		pwr_fireball = false;
+		for (int i = 0; i < 7; i++) {
+			if (i < 4)
+				pwrDuration.add(3);
+			else 
+				pwrDuration.add(5);
+			pwrActivated.add(false);
+		}
 	}
 
 	public void showLevel() {
@@ -74,7 +80,7 @@ public class Game {
 	public void updateBall() {
 		int bricksBroken = 0;
 		for (int i = 0; i < bricks.size(); i++) {
-			if (bricks.get(i).getDestroyed())	
+			if (bricks.get(i).getDestroyed())
 				bricksBroken++;
 		}
 		if (!pause) {
@@ -148,7 +154,7 @@ public class Game {
 
 	private void brickCollision() {
 		for (int i = 0; i < bricks.size(); i++) {
-			if (ball.getRect().intersects(bricks.get(i).getRect())) {	
+			if (ball.getRect().intersects(bricks.get(i).getRect())) {
 				int ballLeft = (int) ball.getRect().getMinX();
 				int ballHeight = (int) ball.getRect().getHeight();
 				int ballWidth = (int) ball.getRect().getWidth();
@@ -158,11 +164,10 @@ public class Game {
 				Point pointLeft = new Point(ballLeft - 1, ballTop);
 				Point pointTop = new Point(ballLeft, ballTop - 1);
 				Point pointBottom = new Point(ballLeft, ballTop + ballHeight + 1);
-				
+
 				if (!bricks.get(i).getDestroyed()) {
-					if (i % 2 == 0)
-						spawnPwr();
-					
+					spawnPwr();
+
 					if (bricks.get(i).resistance == Utilities.BRICK_RES_1) {
 						bricks.get(i).setDestroyed(true);
 						score++;
@@ -172,44 +177,47 @@ public class Game {
 						ball.dirX = -1;
 					else if (bricks.get(i).getRect().contains(pointLeft))
 						ball.dirX = 1;
-					if (bricks.get(i).getRect().contains(pointTop))	{
+					if (bricks.get(i).getRect().contains(pointTop)) {
 						if (ball.dirX == 0)
 							ball.dirX = -1;
 						ball.dirY = 1;
-					}
-					else if (bricks.get(i).getRect().contains(pointBottom))
+					} else if (bricks.get(i).getRect().contains(pointBottom))
 						ball.dirY = -1;
 					addPwr(bricks.get(i));
 				}
 			}
 		}
 	}
-	
+
 	public void addPwr(Brick b) {
-		if (pwr_3ball || pwr_fireball || pwr_life) {
-			Powerups p = new Powerups();
-			p.x = b.x;
-			p.y = b.y;
-			p.speed = 10;
-			pwr.add(p);
+		for (int i = 0; i < pwrActivated.size(); i++) {
+			if (pwrActivated.get(i)) {
+				Powerups p = new Powerups();
+				p.x = b.x;
+				p.y = b.y;
+				p.speed = 10;
+				p.setPower(i);
+				pwr.add(p);
+			}
 		}
 	}
-	
+
 	public void pwrCollision() {
 		for (int i = 0; i < pwr.size(); i++) {
 			pwr.get(i).y += pwr.get(i).speed;
 			if (paddle.getRect().intersects(pwr.get(i).getRect())) {
-				/***********************aggiungere conseguenze collisione***********************/
+				if (pwr.get(i).getPower() == 1)
+					lives++;
+				Timer t= new Timer();
+				t.schedule(new Countdown(pwrDuration.get(pwr.get(i).power)), 0, 1000);
 				pwr.remove(i);
-			}
-			else if (pwr.get(i).y > Utilities.LIMIT_LINE)
+			} else if (pwr.get(i).y > Utilities.LIMIT_LINE)
 				pwr.remove(i);
 		}
-		pwr_3ball = false;
-		pwr_fireball = false;
-		pwr_life = false;
+		for (int i = 0; i < pwrActivated.size(); i++)
+			pwrActivated.set(i, false);
 	}
-
+	
 	public void showCurrentLevel(int[][] level) {
 		int k = 0;
 		for (int i = 0; i < level.length; i++) {
@@ -224,16 +232,16 @@ public class Game {
 			}
 		}
 	}
-	
+
 	public void spawnPwr() {
 		Random r = new Random();
-		int rand = r.nextInt(100)+1;
+		int rand = r.nextInt(100) + 1;
 		if (rand <= 2)
-			pwr_life = true;
+			pwrActivated.set(Utilities.PWR_LIFE, true);
 		else if (rand > 2 && rand <= 7)
-			pwr_3ball = true;
+			pwrActivated.set(Utilities.PWR_LARGE_PADDLE, true);
 		else if (rand > 8 && rand <= 12)
-			pwr_fireball = true;
+			pwrActivated.set(Utilities.PWR_FIREBALL, true);
 	}
 
 	public void resetGame() {
@@ -276,23 +284,11 @@ public class Game {
 	public int getLives() {
 		return lives;
 	}
-	
+
 	public int getScore() {
 		return score;
 	}
-	
-	public void setPwrLife(boolean life) {
-		pwr_life = life;
-	}
-	
-	public void setPwr3Ball(boolean ball) {
-		pwr_3ball = ball;
-	}
-	
-	public void setPwrFireball(boolean fireball) {
-		pwr_fireball = fireball;
-	}
-	
+
 	public ArrayList<Powerups> getPwr() {
 		return pwr;
 	}

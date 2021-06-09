@@ -15,7 +15,7 @@ public class Utilities {
 	public static final int BRICK_RES_2 = 2; // 2 colpi per distruggerlo
 	public static final int BRICK_RES_3 = 3; // indistruttibile
 	public static final int PWR_LIFE = 1;
-	public static final int PWR_3BALL = 2;
+	public static final int PWR_LARGE_PADDLE = 2;
 	public static final int PWR_FIREBALL = 3;
 	public static final int NERF_DIM_PADDLE = 4;
 	public static final int NERF_VEL_PADDLE = 5;

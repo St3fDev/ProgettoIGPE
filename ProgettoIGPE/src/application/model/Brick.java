@@ -4,10 +4,8 @@ import java.awt.Rectangle;
 
 import application.config.Utilities;
 
-public class Brick {
-	
-	int x;
-	int y; 
+public class Brick extends CommonVariable {
+
 	int resistance;
 	int resistanceInit;  
 	Boolean destroyed;
@@ -17,15 +15,7 @@ public class Brick {
 		this.y = y;
 		destroyed = false;
 	}
-	
-	public int getX() {
-		return x;
-	}
-	
-	public int getY() {
-		return y;
-	}
-	
+
 	public Boolean getDestroyed() {
 		return destroyed;
 	}

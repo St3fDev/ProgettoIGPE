@@ -7,13 +7,11 @@ import javax.imageio.ImageIO;
 
 import application.config.Utilities;
 
-public class BrickView {
+public class BrickView extends Common {
 	
 	Image img;
 	Image img2;
 	Image img3;
-	int dimX;
-	int dimY;
 	
 	public BrickView() {
 		dimX = Utilities.DIM_X_BRICK;

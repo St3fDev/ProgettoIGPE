@@ -85,7 +85,12 @@ public class GamePanel extends JPanel {
 		}
 		ArrayList<Powerups> pwr = Game.getInstance().getPwr();
 		for (int i = 0; i < pwr.size(); i++) {
-			g2d.fillRect(pwr.get(i).getX(), pwr.get(i).getY(), Utilities.DIM_PWR, Utilities.DIM_PWR);
+			if (pwr.get(i).getPower() == Utilities.PWR_LIFE) 
+				g2d.fillRect(pwr.get(i).getX(), pwr.get(i).getY(), Utilities.DIM_PWR, Utilities.DIM_PWR);
+			else if (pwr.get(i).getPower() == Utilities.PWR_LARGE_PADDLE) 
+				g2d.drawRect(pwr.get(i).getX(), pwr.get(i).getY(), Utilities.DIM_PWR, Utilities.DIM_PWR);
+			else if (pwr.get(i).getPower() == Utilities.PWR_FIREBALL)
+				g2d.fillOval(pwr.get(i).getX(), pwr.get(i).getY(), Utilities.DIM_PWR, Utilities.DIM_PWR);
 		}
 	}
 

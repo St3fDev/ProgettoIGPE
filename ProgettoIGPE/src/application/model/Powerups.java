@@ -4,17 +4,16 @@ import java.awt.Rectangle;
 
 import application.config.Utilities;
 
-public class Powerups {
-	int x;
-	int y;
+public class Powerups extends CommonVariable {
 	int speed;
+	int power;
 	
-	public int getX() {
-		return x;
+	public void setPower(int pwr) {
+		power = pwr;
 	}
 	
-	public int getY() {
-		return y;
+	public int getPower() {
+		return power;
 	}
 	
 	public Rectangle getRect() {

@@ -9,11 +9,9 @@ import javax.imageio.ImageIO;
 import application.config.Utilities;
 import application.model.Game;
 
-public class PaddleView {
+public class PaddleView extends Common {
 	
 	Image img;
-	int dimX;
-	int dimY;
 	
 	public PaddleView() {
 		dimX = Utilities.DIM_X_PADDLE;

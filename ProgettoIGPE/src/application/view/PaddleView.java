@@ -12,12 +12,14 @@ import application.model.Game;
 public class PaddleView extends Common {
 	
 	Image img;
+	Image img2;
 	
 	public PaddleView() {
 		dimX = Utilities.DIM_X_PADDLE;
 		dimY = Utilities.DIM_Y_PADDLE;
 		try {
 			img = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/paddle.png"));
+			img2 = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/paddleLarge.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

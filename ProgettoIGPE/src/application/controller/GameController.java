@@ -2,9 +2,6 @@ package application.controller;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseMotionListener;
 
 import application.model.Game;
 import application.view.GamePanel;
@@ -29,10 +26,12 @@ public class GameController implements KeyListener {
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			Game.getInstance().movePaddle(1);
 			Game.getInstance().setPause(false);
+			gp.setFirstTime(false);
 		}
 		else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			Game.getInstance().movePaddle(0);
 			Game.getInstance().setPause(false);
+			gp.setFirstTime(false);
 		}
 		else if (e.getKeyCode() == KeyEvent.VK_P) {
 			if (Game.getInstance().getPause())

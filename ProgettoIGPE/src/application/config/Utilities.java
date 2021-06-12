@@ -17,9 +17,8 @@ public class Utilities {
 	public static final int PWR_LIFE = 1;
 	public static final int PWR_LARGE_PADDLE = 2;
 	public static final int PWR_FIREBALL = 3;
-	public static final int NERF_DIM_PADDLE = 4;
-	public static final int NERF_VEL_PADDLE = 5;
-	public static final int NERF_VEL_BALL = 6;
+	public static final int NERF_VEL_PADDLE = 4;
+	public static final int NERF_VEL_BALL = 5;
 	public static final String GAME_OVER = "GAME OVER";
 	
 }

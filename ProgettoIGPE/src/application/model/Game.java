@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
-import java.util.concurrent.CountDownLatch;
 
 import application.config.Utilities;
 import application.view.Maps;
@@ -14,15 +13,20 @@ public class Game {
 	private static Game game = null;
 	private boolean pause;
 	private Paddle paddle;
+	private int firstHalfPaddle;
 	private Ball ball;
 	private ArrayList<Brick> bricks;
 	private ArrayList<Powerups> pwr;
 	private ArrayList<Boolean> pwrActivated;
 	private ArrayList<Integer> pwrDuration;
+	private ArrayList<Boolean> managerTimePwr;
+	private int widthPaddle;
+	private int velBall;
 	private int level;
 	private int lives;
 	private int score;
-
+	private Timer timer; 
+	
 	public static Game getInstance() {
 		if (game == null)
 			game = new Game();
@@ -33,8 +37,9 @@ public class Game {
 		paddle = new Paddle();
 		paddle.x = Utilities.WIDTH_SIZE / 2 - Utilities.DIM_X_PADDLE / 2;
 		paddle.y = Utilities.HEIGHT_SIZE - 120;
+		firstHalfPaddle = 30;
 		paddle.speed = 25;
-
+		widthPaddle = 0;
 		ball = new Ball();
 		ball.x = Utilities.WIDTH_SIZE / 2 - Utilities.DIM_BALL / 2;
 		ball.y = Utilities.HEIGHT_SIZE - 140;
@@ -45,14 +50,15 @@ public class Game {
 		pwr = new ArrayList<Powerups>();
 		pwrActivated = new ArrayList<Boolean>();
 		pwrDuration = new ArrayList<Integer>();
+		managerTimePwr = new ArrayList<Boolean>();
 		lives = 3;
 		score = 0;
-		for (int i = 0; i < 7; i++) {
-			if (i < 4)
-				pwrDuration.add(3);
-			else 
-				pwrDuration.add(5);
+		velBall = 8;
+		timer = new Timer();
+		for (int i = 0; i < 6; i++) {
+			pwrDuration.add(5);
 			pwrActivated.add(false);
+			managerTimePwr.add(false);
 		}
 	}
 
@@ -64,8 +70,9 @@ public class Game {
 		if (!pause) {
 			switch (direction) {
 			case 0:
-				if (paddle.x + paddle.speed <= Utilities.WIDTH_SIZE - Utilities.DIM_X_PADDLE)
+				if (paddle.x + paddle.speed <= Utilities.WIDTH_SIZE - (Utilities.DIM_X_PADDLE + widthPaddle)) {
 					paddle.x += paddle.speed;
+				}
 				break;
 			case 1:
 				if (paddle.x - paddle.speed >= 0)
@@ -83,6 +90,14 @@ public class Game {
 			if (bricks.get(i).getDestroyed())
 				bricksBroken++;
 		}
+		if (bricksBroken == bricks.size()) {
+			timer.schedule(new Countdown(3,0), 0, 1000);
+			level++;
+			score = 0;
+			bricks.clear();
+			showCurrentLevel(Maps.getIstance().ReadMap(getLevel()));
+			resetGame();
+		}
 		if (!pause) {
 			if ((ball.x <= 0 && ball.dirX < 0)
 					|| (ball.x + Utilities.DIM_BALL >= Utilities.WIDTH_SIZE && ball.dirX > 0))
@@ -94,7 +109,7 @@ public class Game {
 				ball.dirX = -1;
 			ballCollision();
 			int cont = 0;
-			while (cont != 8) {
+			while (cont != velBall) {
 				ball.x += ball.dirX;
 				ball.y += ball.dirY;
 				cont++;
@@ -115,12 +130,12 @@ public class Game {
 		if (paddle.getRect().intersects(ball.getRect())) {
 			int posPaddle = (int) paddle.getRect().getMinX();
 			int posBall = (int) ball.getRect().getMinX();
-
-			int firstHalf = posPaddle + 30;
-			int secondHalf = posPaddle + 60;
-			int thirdHalf = posPaddle + 90;
-			int fourthHalf = posPaddle + 120;
-
+			
+			int firstHalf = posPaddle + firstHalfPaddle;
+			int secondHalf = posPaddle + firstHalfPaddle*2;
+			int thirdHalf = posPaddle + firstHalfPaddle*3;
+			int fourthHalf = posPaddle + firstHalfPaddle*4;
+			
 			if (posBall < firstHalf) {
 				if (ball.dirX > 0)
 					ball.dirX = -ball.dirX;
@@ -166,24 +181,29 @@ public class Game {
 				Point pointBottom = new Point(ballLeft, ballTop + ballHeight + 1);
 
 				if (!bricks.get(i).getDestroyed()) {
-					spawnPwr();
-
-					if (bricks.get(i).resistance == Utilities.BRICK_RES_1) {
+					if (managerTimePwr.get(Utilities.PWR_FIREBALL)) {
 						bricks.get(i).setDestroyed(true);
 						score++;
-					}
-					bricks.get(i).resistance--;
-					if (bricks.get(i).getRect().contains(pointRight))
-						ball.dirX = -1;
-					else if (bricks.get(i).getRect().contains(pointLeft))
-						ball.dirX = 1;
-					if (bricks.get(i).getRect().contains(pointTop)) {
-						if (ball.dirX == 0)
+					} else {
+						if (bricks.get(i).resistance == Utilities.BRICK_RES_1) {
+							if (i % 2 == 0)
+								spawnPwr();
+							bricks.get(i).setDestroyed(true);
+							score++;
+						}
+						bricks.get(i).resistance--;
+						if (bricks.get(i).getRect().contains(pointRight))
 							ball.dirX = -1;
-						ball.dirY = 1;
-					} else if (bricks.get(i).getRect().contains(pointBottom))
-						ball.dirY = -1;
-					addPwr(bricks.get(i));
+						else if (bricks.get(i).getRect().contains(pointLeft))
+							ball.dirX = 1;
+						if (bricks.get(i).getRect().contains(pointTop)) {
+							if (ball.dirX == 0)
+								ball.dirX = -1;
+							ball.dirY = 1;
+						} else if (bricks.get(i).getRect().contains(pointBottom))
+							ball.dirY = -1;
+						addPwr(bricks.get(i));
+					}
 				}
 			}
 		}
@@ -193,7 +213,7 @@ public class Game {
 		for (int i = 0; i < pwrActivated.size(); i++) {
 			if (pwrActivated.get(i)) {
 				Powerups p = new Powerups();
-				p.x = b.x;
+				p.x = b.x + Utilities.DIM_X_BRICK / 2;
 				p.y = b.y;
 				p.speed = 10;
 				p.setPower(i);
@@ -203,21 +223,33 @@ public class Game {
 	}
 
 	public void pwrCollision() {
-		for (int i = 0; i < pwr.size(); i++) {
-			pwr.get(i).y += pwr.get(i).speed;
-			if (paddle.getRect().intersects(pwr.get(i).getRect())) {
-				if (pwr.get(i).getPower() == 1)
-					lives++;
-				Timer t= new Timer();
-				t.schedule(new Countdown(pwrDuration.get(pwr.get(i).power)), 0, 1000);
-				pwr.remove(i);
-			} else if (pwr.get(i).y > Utilities.LIMIT_LINE)
-				pwr.remove(i);
+		if (!pause) {
+			for (int i = 0; i < pwr.size(); i++) {
+				pwr.get(i).y += pwr.get(i).speed;
+				if (paddle.getRect().intersects(pwr.get(i).getRect())) {
+					if (pwr.get(i).getPower() == Utilities.PWR_LIFE)
+						lives++;
+					if (pwr.get(i).getPower() == Utilities.PWR_LARGE_PADDLE && !managerTimePwr.get(Utilities.PWR_LARGE_PADDLE)) 
+						timer.schedule(new Countdown(pwrDuration.get(pwr.get(i).power), Utilities.PWR_LARGE_PADDLE), 0, 1000);
+					
+					if (pwr.get(i).getPower() == Utilities.PWR_FIREBALL && !managerTimePwr.get(Utilities.PWR_FIREBALL))
+						timer.schedule(new Countdown(pwrDuration.get(pwr.get(i).power), Utilities.PWR_FIREBALL), 0, 1000);
+					
+					if (pwr.get(i).getPower() == Utilities.NERF_VEL_PADDLE) 
+						timer.schedule(new Countdown(pwrDuration.get(pwr.get(i).power), Utilities.NERF_VEL_PADDLE), 0, 1000);
+						
+					if (pwr.get(i).getPower() == Utilities.NERF_VEL_BALL) 
+						velBall = 14;
+					
+					pwr.remove(i);
+				} else if (pwr.get(i).y > Utilities.LIMIT_LINE)
+					pwr.remove(i);
+			}
+			for (int i = 0; i < pwrActivated.size(); i++)
+				pwrActivated.set(i, false);
 		}
-		for (int i = 0; i < pwrActivated.size(); i++)
-			pwrActivated.set(i, false);
 	}
-	
+
 	public void showCurrentLevel(int[][] level) {
 		int k = 0;
 		for (int i = 0; i < level.length; i++) {
@@ -238,10 +270,14 @@ public class Game {
 		int rand = r.nextInt(100) + 1;
 		if (rand <= 2)
 			pwrActivated.set(Utilities.PWR_LIFE, true);
-		else if (rand > 2 && rand <= 7)
+		else if (rand > 3 && rand <= 7)
 			pwrActivated.set(Utilities.PWR_LARGE_PADDLE, true);
 		else if (rand > 8 && rand <= 12)
 			pwrActivated.set(Utilities.PWR_FIREBALL, true);
+		else if (rand > 12 && rand <= 17)
+			pwrActivated.set(Utilities.NERF_VEL_BALL, true);
+		else if (rand > 18 && rand <= 23)
+			pwrActivated.set(Utilities.NERF_VEL_PADDLE, true);
 	}
 
 	public void resetGame() {
@@ -249,6 +285,8 @@ public class Game {
 		paddle.y = Utilities.HEIGHT_SIZE - 120;
 		ball.x = Utilities.WIDTH_SIZE / 2 - Utilities.DIM_BALL / 2;
 		ball.y = Utilities.HEIGHT_SIZE - 140;
+		paddle.speed = 25;
+		velBall = 8;
 		ball.dirX = -1;
 		ball.dirY = -1;
 	}
@@ -291,5 +329,25 @@ public class Game {
 
 	public ArrayList<Powerups> getPwr() {
 		return pwr;
+	}
+	
+	public int dimBricks() {
+		return bricks.size();
+	}
+
+	public void setManagerTimePwr(ArrayList<Boolean> managerTimePwr) {
+		this.managerTimePwr = managerTimePwr;
+	}
+
+	public ArrayList<Boolean> getManagerTimePwr() {
+		return managerTimePwr;
+	}
+	
+	public void setWidthPaddle(int widthPaddle) {
+		this.widthPaddle = widthPaddle;
+	}
+
+	public void setFirstHalfPaddle(int firstHalfPaddle) {
+		this.firstHalfPaddle = firstHalfPaddle;
 	}
 }

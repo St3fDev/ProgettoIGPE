@@ -14,6 +14,7 @@ public class LevelsPagePanel extends JPanel {
 	private static final long serialVersionUID = 8374418925237195039L;
 
 	Image background;
+	JButton backToHome;
 	HashMap<Integer, JButton> levels;
 	
 	public LevelsPagePanel() {
@@ -26,6 +27,9 @@ public class LevelsPagePanel extends JPanel {
 			this.add(level);
 			k+=2;
 		}
+		backToHome = new JButton();
+		ImageLoader.getIstance().backBotton(backToHome);
+		this.add(backToHome);
 		this.setLayout(null);
 	}
 
@@ -42,5 +46,9 @@ public class LevelsPagePanel extends JPanel {
 
 	public HashMap<Integer, JButton> getLevels() {
 		return levels;
+	}
+	
+	public JButton getHomeButton() {
+		return backToHome;
 	}
 }

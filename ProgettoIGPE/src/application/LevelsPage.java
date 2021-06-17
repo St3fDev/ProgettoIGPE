@@ -12,7 +12,7 @@ public class LevelsPage {
 
 	public LevelsPage() {
 
-		levels.setLocation(Main.getJFrame().getLocation());
+		levels.setLocation(Main.startPage.getLocation());
 
 		LevelsPagePanel lv = new LevelsPagePanel();
 		LevelsController controller = new LevelsController(lv);
@@ -26,7 +26,4 @@ public class LevelsPage {
 
 	}
 
-	public static JFrame getJFrame() {
-		return levels;
-	}
 }

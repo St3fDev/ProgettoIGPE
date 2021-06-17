@@ -2,17 +2,26 @@ package application;
 
 import javax.swing.JFrame;
 
+import application.config.Utilities;
+import application.controller.SettingsController;
+import application.view.SettingsPagePanel;
+
 public class SettingsPage {
 	
-	JFrame f;
+	public static JFrame settingsPage = new JFrame();
 
 	public SettingsPage() {
-		f = new JFrame();
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.getContentPane().setFocusable(true);
-		f.setResizable(false);
-		f.setVisible(true);
-		f.setSize(400,400);
-		f.setLocationRelativeTo(null);
+		
+
+		SettingsPagePanel sp = new SettingsPagePanel();
+		SettingsController controller = new SettingsController(sp);
+		
+		settingsPage.setSize(500, 500);
+		settingsPage.setLocationRelativeTo(null);
+		settingsPage.add(sp);
+		settingsPage.setUndecorated(true);
+		settingsPage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		settingsPage.setResizable(false);
+		settingsPage.setVisible(true);
 	}
 }

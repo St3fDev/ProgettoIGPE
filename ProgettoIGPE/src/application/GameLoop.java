@@ -17,6 +17,7 @@ public class GameLoop implements Runnable {
 	public void run() {		
 		while(true) {
 			controller.update(); // che ha il metodo repaint 
+			
 			try {
 				Thread.sleep(frequency);
 			} catch (InterruptedException e) {

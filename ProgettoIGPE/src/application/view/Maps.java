@@ -22,8 +22,8 @@ public class Maps {
 			while (br.ready()) {
 				String line = br.readLine();
 				String[] row = line.split(";");
-				for (int j = 0; j < 7; j++) { 
-					livello[i][j] = Integer.parseInt(row[j]);
+				for (int j = 0; j < 8; j++) { 
+					livello[i][j] = Integer.parseInt(row[j].trim());
 				}
 				i++;
 			}	 
@@ -33,5 +33,4 @@ public class Maps {
 		
 		return livello;
 	}
-	
 }

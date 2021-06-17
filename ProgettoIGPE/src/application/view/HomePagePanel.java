@@ -18,6 +18,7 @@ public class HomePagePanel extends JPanel {
 	JButton startButton;
 	JButton settingsButton;
 	JButton exitButton;
+	boolean settingsOn;
 	
 	public HomePagePanel() {
 		startButton = new JButton();

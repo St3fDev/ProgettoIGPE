@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
 
+import application.config.Sounds;
 import application.config.Utilities;
 import application.view.Maps;
 
@@ -25,7 +26,10 @@ public class Game {
 	private int level;
 	private int lives;
 	private int score;
+	private Sounds sound;
 	private Timer timer; 
+	private Sounds loseLife;
+	private Sounds paddleSound;
 	
 	public static Game getInstance() {
 		if (game == null)
@@ -51,6 +55,9 @@ public class Game {
 		pwrActivated = new ArrayList<Boolean>();
 		pwrDuration = new ArrayList<Integer>();
 		managerTimePwr = new ArrayList<Boolean>();
+		sound = new Sounds("levelCompleted.wav");
+		loseLife = new Sounds("loseLife.wav");
+		paddleSound = new Sounds("paddle.wav");
 		lives = 3;
 		score = 0;
 		velBall = 8;
@@ -92,8 +99,10 @@ public class Game {
 		}
 		if (bricksBroken == bricks.size()) {
 			timer.schedule(new Countdown(3,0), 0, 1000);
+			sound.start();
 			level++;
 			score = 0;
+			
 			bricks.clear();
 			showCurrentLevel(Maps.getIstance().ReadMap(getLevel()));
 			resetGame();
@@ -105,8 +114,15 @@ public class Game {
 			if ((ball.y <= 0 && ball.dirY < 0)
 					|| (ball.y + Utilities.DIM_BALL >= Utilities.HEIGHT_SIZE && ball.dirY > 0))
 				ball.dirY = -ball.dirY;
-			if (ball.y <= 0 && ball.dirX == 0)
-				ball.dirX = -1;
+			if (ball.y <= 0 && ball.dirX == 0) {
+				Random direction = new Random();
+				int  dir = direction.nextInt(2) + 1;
+				System.out.println(dir);
+				if (dir == 1)
+					ball.dirX = -1;
+				else 
+					ball.dirX = 1;
+			}
 			ballCollision();
 			int cont = 0;
 			while (cont != velBall) {
@@ -125,12 +141,13 @@ public class Game {
 	private void paddleCollision() {
 		if (ball.getRect().getMaxY() > Utilities.LIMIT_LINE) {
 			lives--;
+			loseLife.start();
 			resetGame();
 		}
 		if (paddle.getRect().intersects(ball.getRect())) {
 			int posPaddle = (int) paddle.getRect().getMinX();
 			int posBall = (int) ball.getRect().getMinX();
-			
+			paddleSound.start();
 			int firstHalf = posPaddle + firstHalfPaddle;
 			int secondHalf = posPaddle + firstHalfPaddle*2;
 			int thirdHalf = posPaddle + firstHalfPaddle*3;
@@ -227,8 +244,10 @@ public class Game {
 			for (int i = 0; i < pwr.size(); i++) {
 				pwr.get(i).y += pwr.get(i).speed;
 				if (paddle.getRect().intersects(pwr.get(i).getRect())) {
-					if (pwr.get(i).getPower() == Utilities.PWR_LIFE)
+					if (pwr.get(i).getPower() == Utilities.PWR_LIFE) {
+					if (lives <= 5)
 						lives++;
+					}
 					if (pwr.get(i).getPower() == Utilities.PWR_LARGE_PADDLE && !managerTimePwr.get(Utilities.PWR_LARGE_PADDLE)) 
 						timer.schedule(new Countdown(pwrDuration.get(pwr.get(i).power), Utilities.PWR_LARGE_PADDLE), 0, 1000);
 					
@@ -268,7 +287,7 @@ public class Game {
 	public void spawnPwr() {
 		Random r = new Random();
 		int rand = r.nextInt(100) + 1;
-		if (rand <= 2)
+		if (rand <= 2 && level < 6)
 			pwrActivated.set(Utilities.PWR_LIFE, true);
 		else if (rand > 3 && rand <= 7)
 			pwrActivated.set(Utilities.PWR_LARGE_PADDLE, true);
@@ -285,6 +304,7 @@ public class Game {
 		paddle.y = Utilities.HEIGHT_SIZE - 120;
 		ball.x = Utilities.WIDTH_SIZE / 2 - Utilities.DIM_BALL / 2;
 		ball.y = Utilities.HEIGHT_SIZE - 140;
+		pwr.clear();
 		paddle.speed = 25;
 		velBall = 8;
 		ball.dirX = -1;

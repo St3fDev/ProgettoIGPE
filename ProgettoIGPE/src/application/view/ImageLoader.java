@@ -67,5 +67,14 @@ public class ImageLoader {
 		b.setContentAreaFilled(false);
 	}
 	
-	
+	public void backBotton(JButton b) {
+		ImageIcon backBotton;
+		backBotton = new ImageIcon(getClass().getResource("/application/resources/home/home1.png").getPath());
+		b.setIcon(backBotton);
+		b.setBounds(40,50,50,50);
+		b.setFocusable(false);
+		b.setOpaque(false);
+		b.setBorder(BorderFactory.createEmptyBorder());
+		b.setContentAreaFilled(false);
+	}
 }

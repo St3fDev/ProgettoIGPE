@@ -23,7 +23,7 @@ public class Countdown extends TimerTask {
 					Game.getInstance().setWidthPaddle(50);
 				}
 				if (idx == Utilities.NERF_VEL_PADDLE) 
-					Game.getInstance().getPaddle().speed = 18;
+					Game.getInstance().getPaddle().speed = 16;
 				seconds--;
 			} else {
 				Game.getInstance().getManagerTimePwr().set(idx, false);

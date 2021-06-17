@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import application.LevelsPage;
 import application.Main;
 import application.SettingsPage;
+import application.config.Sounds;
 import application.view.HomePagePanel;
 import application.view.ImageLoader;
 
@@ -20,9 +21,11 @@ public class HomeController extends MouseAdapter {
 	JButton exit;
 	JButton start;
 	JButton settings;
+	Sounds bottonEffect;
 	
 	public HomeController(HomePagePanel homePage) {
 		this.homePage = homePage;
+		//bottonEffect = new Sounds("oraVa.wav");
 		exit = homePage.getExitButton();
 		start = homePage.getStartButton();
 		settings = homePage.getSettingsButton();
@@ -33,16 +36,19 @@ public class HomeController extends MouseAdapter {
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if (e.getSource() == exit)
+		if (e.getSource() == exit) {
+			//bottonEffect.start();
 			System.exit(0);
+		}
 		
 		if (e.getSource() == start) {
-			JFrame f = Main.getJFrame();
-			f.dispose();
+			//bottonEffect.start();
+			Main.startPage.setVisible(false);
 			LevelsPage lp = new LevelsPage();
 		}
-		/******aggiungere il click sulla finestra settings******/
 		if (e.getSource() == settings) {
+			//Main.startPage.setVisible(false);
+			Main.startPage.setEnabled(false);
 			SettingsPage sp = new SettingsPage();
 		}
 	}
@@ -66,5 +72,6 @@ public class HomeController extends MouseAdapter {
 		if (e.getSource() == exit)
 			ImageLoader.getIstance().initExitButton(exit, 0);
 	}
+
 
 }

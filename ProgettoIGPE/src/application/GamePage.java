@@ -3,6 +3,7 @@ package application;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import application.config.Sounds;
 import application.config.Utilities;
 import application.controller.GameController;
 import application.model.Game;
@@ -24,7 +25,7 @@ public class GamePage {
 		gamePage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gamePage.setResizable(false);
 		gamePage.setSize(Utilities.WIDTH_SIZE, Utilities.HEIGHT_SIZE);
-		gamePage.setLocation(Main.getJFrame().getLocation());
+		gamePage.setLocation(Main.startPage.getLocation());
 		gamePage.setVisible(true);
 		GameLoop gameLoop = new GameLoop(controller);
 		Thread t = new Thread(gameLoop);

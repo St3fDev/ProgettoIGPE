@@ -19,11 +19,11 @@ public class Main {
 		startPage.setSize(Utilities.WIDTH_SIZE, Utilities.HEIGHT_SIZE);
 		HomePagePanel start = new HomePagePanel();
 		HomeController home = new HomeController(start);
-		soundMenu = new Sounds("soundTrack.wav");
-		soundMenu.reduceVolume();
-		soundTrack = new Sounds("soundTrack.wav");
-		soundMenu.start();
-		soundMenu.loop();
+		//soundMenu = new Sounds("soundTrack.wav");
+		//soundMenu.reduceVolume();
+		//soundTrack = new Sounds("soundTrack.wav");
+		//soundMenu.start();
+		//soundMenu.loop();
 		startPage.setLocationRelativeTo(null);
 		startPage.setResizable(false);
 		startPage.setUndecorated(true);

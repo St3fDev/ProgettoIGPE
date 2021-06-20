@@ -1,50 +1,66 @@
 package application.controller;
 
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.JOptionPane;
+
+import application.GamePage;
+import application.LevelsPage;
 import application.model.Game;
 import application.view.GamePanel;
+import application.view.Maps;
 
-public class GameController implements KeyListener {
+public class GameController extends KeyAdapter {
 
 	private GamePanel gp;
 	Game game = Game.getInstance();
-	
+
 	public GameController(GamePanel gp) {
 		this.gp = gp;
 	}
-	
+
 	public void update() {
+		if (!game.isLose() && !game.isWon()) {
+			game.updateBall();
+			game.pwrCollision();
+		}
 		gp.update();
-		game.updateBall();
-		game.pwrCollision();
 	}
-	
+
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			Game.getInstance().movePaddle(1);
-			Game.getInstance().setPause(false);
-			gp.setFirstTime(false);
+		if (!game.isLose()) {
+			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+				game.movePaddle(1);
+				game.setPause(false);
+				gp.setFirstTime(false);
+			} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+				game.movePaddle(0);
+				game.setPause(false);
+				gp.setFirstTime(false);
+			} else if (e.getKeyCode() == KeyEvent.VK_P) {
+				if (game.isPause())
+					game.setPause(false);
+				else
+					game.setPause(true);
+			}
+		} else {
+			if (e.getKeyCode() == KeyEvent.VK_R) {
+				game.restartAll();
+				gp.setGame(true);
+			}
+			if (e.getKeyCode() == KeyEvent.VK_Q) {
+				System.exit(0);
+			}
 		}
-		else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			Game.getInstance().movePaddle(0);
-			Game.getInstance().setPause(false);
-			gp.setFirstTime(false);
-		}
-		else if (e.getKeyCode() == KeyEvent.VK_P) {
-			if (Game.getInstance().getPause())
-				Game.getInstance().setPause(false);
-			else 
-				Game.getInstance().setPause(true);
-		}
+		if (game.isPause())
+			if (e.getKeyCode() == KeyEvent.VK_Q) {
+				int a = JOptionPane.showConfirmDialog(gp,
+						"Are you sure you want to quit the game? All progress will be lost","Confirm",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				if (a == JOptionPane.YES_OPTION)
+					System.exit(0);
+			}
 	}
-	
-	@Override
-	public void keyTyped(KeyEvent e) {}
-	
-	@Override
-	public void keyReleased(KeyEvent e) {}
-
 }

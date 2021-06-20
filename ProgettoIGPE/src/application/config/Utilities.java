@@ -11,9 +11,11 @@ public class Utilities {
 	public static final int DIM_X_BRICK = 100;
 	public static final int DIM_Y_BRICK = 40;
 	public static final int DIM_PWR = 20;
+	public static final int DIM_BOSS = 100;
 	public static final int BRICK_RES_1 = 1; // 1 colpo per distruggerlo
 	public static final int BRICK_RES_2 = 2; // 2 colpi per distruggerlo
-	public static final int BRICK_RES_3 = 3; // indistruttibile
+	public static final int BRICK_RES_3 = 3; // 3 colpi per distruggerlo
+	public static final int BRICK_LIGHT = 4;
 	public static final int PWR_LIFE = 1;
 	public static final int PWR_LARGE_PADDLE = 2;
 	public static final int PWR_FIREBALL = 3;

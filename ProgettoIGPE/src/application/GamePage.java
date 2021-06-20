@@ -11,7 +11,7 @@ import application.view.GamePanel;
 
 public class GamePage {
 	
-	JFrame gamePage = new JFrame();
+	public static JFrame gamePage = new JFrame();
 	
 	public GamePage(int lvl) {
 		GamePanel gp = new GamePanel();

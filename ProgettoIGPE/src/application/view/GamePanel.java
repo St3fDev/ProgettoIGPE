@@ -56,9 +56,14 @@ public class GamePanel extends JPanel {
 	}
 
 	public void inGame(Graphics2D g2d) {
-		if (!Game.getInstance().getPause() || firstTime) {
+		if (Game.getInstance().isWon()) {
+			g2d.drawString("YOU COMPLETED THE GAME", 400, 500);
+			return;
+		}
+		if (!Game.getInstance().isPause() || firstTime) {
 		if (loseLives(g2d))
 			return;
+		
 			int x_paddle = Game.getInstance().getPaddle().getX();
 			int y_paddle = Game.getInstance().getPaddle().getY();
 			if (Game.getInstance().getManagerTimePwr().get(Utilities.PWR_LARGE_PADDLE)) {
@@ -77,20 +82,23 @@ public class GamePanel extends JPanel {
 			for (int i = 0; i < bricks.size(); i++) {
 				if (!bricks.get(i).getDestroyed()) {
 					if (bricks.get(i).getResistance() == Utilities.BRICK_RES_1) {
-						// g2d.fillRect(bricks[i].getX(), bricks[i].getY(), Utilities.DIM_X_BRICK,
-						// Utilities.DIM_Y_BRICK);
-						g2d.drawImage(brick.img3, bricks.get(i).getX(), bricks.get(i).getY(), brick.dimX, brick.dimY,
-								null);
+						g2d.drawImage(brick.img3, bricks.get(i).getX(), bricks.get(i).getY(), brick.dimX, brick.dimY, null);
 					} else if (bricks.get(i).getResistance() == Utilities.BRICK_RES_2) {
 						if (bricks.get(i).getLivesBrick() == 2)
-							g2d.drawImage(brick.img, bricks.get(i).getX(), bricks.get(i).getY(), brick.dimX, brick.dimY,
+							g2d.drawImage(brick.img1, bricks.get(i).getX(), bricks.get(i).getY(), brick.dimX, brick.dimY,
 									null);
 						if (bricks.get(i).getLivesBrick() == 1)
 							g2d.drawImage(brick.img2, bricks.get(i).getX(), bricks.get(i).getY(), brick.dimX,
 									brick.dimY, null);
-					} else {
+					} else if (bricks.get(i).getResistance() == Utilities.BRICK_RES_3){
 						g2d.fillRect(bricks.get(i).getX(), bricks.get(i).getY(), Utilities.DIM_X_BRICK,
 								Utilities.DIM_Y_BRICK);
+					}
+					else if (bricks.get(i).getResistance() == Utilities.BRICK_LIGHT) {
+						if (bricks.get(i).getLivesBrick() == Utilities.BRICK_LIGHT)
+							g2d.fillRect(bricks.get(i).getX(), bricks.get(i).getY(), Utilities.DIM_X_BRICK, Utilities.DIM_Y_BRICK);
+						else 
+							g2d.drawRect(bricks.get(i).getX(), bricks.get(i).getY(), Utilities.DIM_X_BRICK, Utilities.DIM_Y_BRICK);
 					}
 				}
 			}
@@ -148,5 +156,9 @@ public class GamePanel extends JPanel {
 
 	public void setFirstTime(boolean firstTime) {
 		this.firstTime = firstTime;
+	}
+	
+	public void setGame(boolean game) {
+		this.game = game;
 	}
 }

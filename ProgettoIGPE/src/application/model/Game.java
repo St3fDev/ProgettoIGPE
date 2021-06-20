@@ -2,6 +2,7 @@ package application.model;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.Timer;
 
@@ -21,16 +22,21 @@ public class Game {
 	private ArrayList<Boolean> pwrActivated;
 	private ArrayList<Integer> pwrDuration;
 	private ArrayList<Boolean> managerTimePwr;
+	private HashMap<Integer, Boolean> lightOn;
+	private ArrayList<Integer> positionLight;
 	private int widthPaddle;
 	private int velBall;
 	private int level;
 	private int lives;
 	private int score;
 	private Sounds sound;
-	private Timer timer; 
+	private Timer timer;
 	private Sounds loseLife;
 	private Sounds paddleSound;
-	
+	private Sounds gameOver;
+	private boolean lose;
+	private boolean won;
+
 	public static Game getInstance() {
 		if (game == null)
 			game = new Game();
@@ -50,17 +56,22 @@ public class Game {
 		ball.dirX = -1;
 		ball.dirY = -1;
 		pause = true;
+		lose = false;
+		won = false;
 		bricks = new ArrayList<Brick>();
 		pwr = new ArrayList<Powerups>();
 		pwrActivated = new ArrayList<Boolean>();
 		pwrDuration = new ArrayList<Integer>();
 		managerTimePwr = new ArrayList<Boolean>();
+		lightOn = new HashMap<Integer,Boolean>();
+		positionLight = new ArrayList<Integer>();
 		sound = new Sounds("levelCompleted.wav");
 		loseLife = new Sounds("loseLife.wav");
 		paddleSound = new Sounds("paddle.wav");
+		gameOver = new Sounds("gameover.wav");
 		lives = 3;
 		score = 0;
-		velBall = 8;
+		velBall = 9;
 		timer = new Timer();
 		for (int i = 0; i < 6; i++) {
 			pwrDuration.add(5);
@@ -92,20 +103,22 @@ public class Game {
 	}
 
 	public void updateBall() {
-		int bricksBroken = 0;
-		for (int i = 0; i < bricks.size(); i++) {
-			if (bricks.get(i).getDestroyed())
-				bricksBroken++;
-		}
-		if (bricksBroken == bricks.size()) {
-			timer.schedule(new Countdown(3,0), 0, 1000);
-			sound.start();
-			level++;
-			score = 0;
-			
-			bricks.clear();
-			showCurrentLevel(Maps.getIstance().ReadMap(getLevel()));
-			resetGame();
+		if (level < 8) {
+			int bricksBroken = 0;
+			for (int i = 0; i < bricks.size(); i++) {
+				if (bricks.get(i).getDestroyed())
+					bricksBroken++;
+			}
+			if (bricksBroken == bricks.size()) {
+				timer.schedule(new Countdown(3, 0), 0, 1000);
+				sound.start();
+				level++;
+				score = 0;
+
+				bricks.clear();
+				showCurrentLevel(Maps.getIstance().ReadMap(getLevel()));
+				resetGame();
+			}
 		}
 		if (!pause) {
 			if ((ball.x <= 0 && ball.dirX < 0)
@@ -116,11 +129,10 @@ public class Game {
 				ball.dirY = -ball.dirY;
 			if (ball.y <= 0 && ball.dirX == 0) {
 				Random direction = new Random();
-				int  dir = direction.nextInt(2) + 1;
-				System.out.println(dir);
+				int dir = direction.nextInt(2) + 1;
 				if (dir == 1)
 					ball.dirX = -1;
-				else 
+				else
 					ball.dirX = 1;
 			}
 			ballCollision();
@@ -141,7 +153,12 @@ public class Game {
 	private void paddleCollision() {
 		if (ball.getRect().getMaxY() > Utilities.LIMIT_LINE) {
 			lives--;
-			loseLife.start();
+			if (lives == 0) {
+				lose = true;
+				gameOver.start();
+				return;
+			} else
+				loseLife.start();
 			resetGame();
 		}
 		if (paddle.getRect().intersects(ball.getRect())) {
@@ -149,10 +166,10 @@ public class Game {
 			int posBall = (int) ball.getRect().getMinX();
 			paddleSound.start();
 			int firstHalf = posPaddle + firstHalfPaddle;
-			int secondHalf = posPaddle + firstHalfPaddle*2;
-			int thirdHalf = posPaddle + firstHalfPaddle*3;
-			int fourthHalf = posPaddle + firstHalfPaddle*4;
-			
+			int secondHalf = posPaddle + firstHalfPaddle * 2;
+			int thirdHalf = posPaddle + firstHalfPaddle * 3;
+			int fourthHalf = posPaddle + firstHalfPaddle * 4;
+
 			if (posBall < firstHalf) {
 				if (ball.dirX > 0)
 					ball.dirX = -ball.dirX;
@@ -192,10 +209,12 @@ public class Game {
 				int ballWidth = (int) ball.getRect().getWidth();
 				int ballTop = (int) ball.getRect().getMinY();
 
-				Point pointRight = new Point(ballLeft + ballWidth + 1, ballTop);
-				Point pointLeft = new Point(ballLeft - 1, ballTop);
-				Point pointTop = new Point(ballLeft, ballTop - 1);
-				Point pointBottom = new Point(ballLeft, ballTop + ballHeight + 1);
+				Point pointR = new Point(ballLeft + ballWidth + 1, ballTop);
+				Point pointR_B = new Point(ballLeft + ballWidth + 1, ballTop + ballHeight);
+				Point pointL = new Point(ballLeft - 1, ballTop);
+				Point pointT = new Point(ballLeft, ballTop - 1);
+				Point pointT_R = new Point(ballLeft + ballWidth, ballTop - 1);
+				Point pointB = new Point(ballLeft, ballTop + ballHeight + 1);
 
 				if (!bricks.get(i).getDestroyed()) {
 					if (managerTimePwr.get(Utilities.PWR_FIREBALL)) {
@@ -208,24 +227,45 @@ public class Game {
 							bricks.get(i).setDestroyed(true);
 							score++;
 						}
-						bricks.get(i).resistance--;
-						if (bricks.get(i).getRect().contains(pointRight))
+						if (bricks.get(i).resistance < 4)
+							bricks.get(i).resistance--;
+						if (bricks.get(i).getRect().contains(pointR))
 							ball.dirX = -1;
-						else if (bricks.get(i).getRect().contains(pointLeft))
+						else if (bricks.get(i).getRect().contains(pointL))
 							ball.dirX = 1;
-						if (bricks.get(i).getRect().contains(pointTop)) {
+						if (bricks.get(i).getRect().contains(pointT)) {
 							if (ball.dirX == 0)
 								ball.dirX = -1;
 							ball.dirY = 1;
-						} else if (bricks.get(i).getRect().contains(pointBottom))
+						} else if (bricks.get(i).getRect().contains(pointB))
 							ball.dirY = -1;
+						else if (bricks.get(i).getRect().contains(pointR_B))
+							ball.dirX = -1;
+						if (bricks.get(i).resistance == 4) {
+							bricks.get(i).resistance++;
+							setLight(i,true);
+						}
+						else if (bricks.get(i).resistance == 5) {
+							bricks.get(i).resistance--;
+							setLight(i,false);
+						}
 						addPwr(bricks.get(i));
 					}
+				}
+				if (lightOn.get(positionLight.get(0)) && lightOn.get(positionLight.get(1))) {
+					won = true;
 				}
 			}
 		}
 	}
 
+	public void setLight(int value, boolean state) {
+			if (value == positionLight.get(0))   
+				lightOn.replace(positionLight.get(0), state);
+			else if (value == positionLight.get(1))
+				lightOn.replace(positionLight.get(1), state);
+	}
+	
 	public void addPwr(Brick b) {
 		for (int i = 0; i < pwrActivated.size(); i++) {
 			if (pwrActivated.get(i)) {
@@ -245,21 +285,25 @@ public class Game {
 				pwr.get(i).y += pwr.get(i).speed;
 				if (paddle.getRect().intersects(pwr.get(i).getRect())) {
 					if (pwr.get(i).getPower() == Utilities.PWR_LIFE) {
-					if (lives <= 5)
-						lives++;
+						if (lives <= 5)
+							lives++;
 					}
-					if (pwr.get(i).getPower() == Utilities.PWR_LARGE_PADDLE && !managerTimePwr.get(Utilities.PWR_LARGE_PADDLE)) 
-						timer.schedule(new Countdown(pwrDuration.get(pwr.get(i).power), Utilities.PWR_LARGE_PADDLE), 0, 1000);
-					
+					if (pwr.get(i).getPower() == Utilities.PWR_LARGE_PADDLE
+							&& !managerTimePwr.get(Utilities.PWR_LARGE_PADDLE))
+						timer.schedule(new Countdown(pwrDuration.get(pwr.get(i).power), Utilities.PWR_LARGE_PADDLE), 0,
+								1000);
+
 					if (pwr.get(i).getPower() == Utilities.PWR_FIREBALL && !managerTimePwr.get(Utilities.PWR_FIREBALL))
-						timer.schedule(new Countdown(pwrDuration.get(pwr.get(i).power), Utilities.PWR_FIREBALL), 0, 1000);
-					
-					if (pwr.get(i).getPower() == Utilities.NERF_VEL_PADDLE) 
-						timer.schedule(new Countdown(pwrDuration.get(pwr.get(i).power), Utilities.NERF_VEL_PADDLE), 0, 1000);
-						
-					if (pwr.get(i).getPower() == Utilities.NERF_VEL_BALL) 
+						timer.schedule(new Countdown(pwrDuration.get(pwr.get(i).power), Utilities.PWR_FIREBALL), 0,
+								1000);
+
+					if (pwr.get(i).getPower() == Utilities.NERF_VEL_PADDLE)
+						timer.schedule(new Countdown(pwrDuration.get(pwr.get(i).power), Utilities.NERF_VEL_PADDLE), 0,
+								1000);
+
+					if (pwr.get(i).getPower() == Utilities.NERF_VEL_BALL)
 						velBall = 14;
-					
+
 					pwr.remove(i);
 				} else if (pwr.get(i).y > Utilities.LIMIT_LINE)
 					pwr.remove(i);
@@ -276,6 +320,10 @@ public class Game {
 				if (level[i][j] >= Utilities.BRICK_RES_1) {
 					Brick b = new Brick(j * Utilities.DIM_X_BRICK, i * Utilities.DIM_Y_BRICK);
 					bricks.add(b);
+					if (level[i][j] == Utilities.BRICK_LIGHT) {
+						lightOn.put(k, false);
+						positionLight.add(k);
+					}
 					bricks.get(k).resistance = level[i][j];
 					bricks.get(k).resistanceInit = level[i][j];
 					k++;
@@ -287,15 +335,18 @@ public class Game {
 	public void spawnPwr() {
 		Random r = new Random();
 		int rand = r.nextInt(100) + 1;
+		int spawn = 0;
+		if (level == 8)
+			spawn = 20;
 		if (rand <= 2 && level < 6)
 			pwrActivated.set(Utilities.PWR_LIFE, true);
-		else if (rand > 3 && rand <= 7)
+		else if (rand > 3 && rand <= 7 && level != 8)
 			pwrActivated.set(Utilities.PWR_LARGE_PADDLE, true);
-		else if (rand > 8 && rand <= 12)
+		else if (rand > 8 && rand <= 12 && level != 8)
 			pwrActivated.set(Utilities.PWR_FIREBALL, true);
-		else if (rand > 12 && rand <= 17)
+		else if (rand > 12 && rand <= 17 + spawn)
 			pwrActivated.set(Utilities.NERF_VEL_BALL, true);
-		else if (rand > 18 && rand <= 23)
+		else if (rand > 18 + spawn && rand <= 23)
 			pwrActivated.set(Utilities.NERF_VEL_PADDLE, true);
 	}
 
@@ -309,6 +360,15 @@ public class Game {
 		velBall = 8;
 		ball.dirX = -1;
 		ball.dirY = -1;
+	}
+
+	public void restartAll() {
+		lose = false;
+		level = 0;
+		lives = 3;
+		resetGame();
+		bricks.clear();
+		showCurrentLevel(Maps.getIstance().ReadMap(level));
 	}
 
 	public ArrayList<Brick> getBrick() {
@@ -327,7 +387,7 @@ public class Game {
 		pause = p;
 	}
 
-	public boolean getPause() {
+	public boolean isPause() {
 		return pause;
 	}
 
@@ -335,7 +395,7 @@ public class Game {
 		level = lvl;
 	}
 
-	private int getLevel() {
+	public int getLevel() {
 		return level;
 	}
 
@@ -350,7 +410,7 @@ public class Game {
 	public ArrayList<Powerups> getPwr() {
 		return pwr;
 	}
-	
+
 	public int dimBricks() {
 		return bricks.size();
 	}
@@ -362,12 +422,24 @@ public class Game {
 	public ArrayList<Boolean> getManagerTimePwr() {
 		return managerTimePwr;
 	}
-	
+
 	public void setWidthPaddle(int widthPaddle) {
 		this.widthPaddle = widthPaddle;
 	}
 
 	public void setFirstHalfPaddle(int firstHalfPaddle) {
 		this.firstHalfPaddle = firstHalfPaddle;
+	}
+
+	public void setLose(boolean lose) {
+		this.lose = lose;
+	}
+
+	public boolean isLose() {
+		return lose;
+	}
+	
+	public boolean isWon() {
+		return won;
 	}
 }

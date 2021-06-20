@@ -31,7 +31,7 @@ public class GameController extends KeyAdapter {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (!game.isLose()) {
+		if (!game.isLose() && !game.isWon()) {
 			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 				game.movePaddle(1);
 				game.setPause(false);

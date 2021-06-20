@@ -15,7 +15,7 @@ public class Countdown extends TimerTask {
 
 	@Override
 	public void run() {
-		if (!Game.getInstance().getPause()) {
+		if (!Game.getInstance().isPause()) {
 			if (seconds > 0) {
 				Game.getInstance().getManagerTimePwr().set(idx, true);
 				if (idx == Utilities.PWR_LARGE_PADDLE) {

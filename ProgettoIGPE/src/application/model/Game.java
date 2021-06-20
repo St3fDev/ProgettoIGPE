@@ -63,7 +63,7 @@ public class Game {
 		pwrActivated = new ArrayList<Boolean>();
 		pwrDuration = new ArrayList<Integer>();
 		managerTimePwr = new ArrayList<Boolean>();
-		lightOn = new HashMap<Integer,Boolean>();
+		lightOn = new HashMap<Integer, Boolean>();
 		positionLight = new ArrayList<Integer>();
 		sound = new Sounds("levelCompleted.wav");
 		loseLife = new Sounds("loseLife.wav");
@@ -243,29 +243,30 @@ public class Game {
 							ball.dirX = -1;
 						if (bricks.get(i).resistance == 4) {
 							bricks.get(i).resistance++;
-							setLight(i,true);
-						}
-						else if (bricks.get(i).resistance == 5) {
+							setLight(i, true);
+						} else if (bricks.get(i).resistance == 5) {
 							bricks.get(i).resistance--;
-							setLight(i,false);
+							setLight(i, false);
 						}
 						addPwr(bricks.get(i));
 					}
 				}
-				if (lightOn.get(positionLight.get(0)) && lightOn.get(positionLight.get(1))) {
-					won = true;
+				if (level == 8) {
+					if (lightOn.get(positionLight.get(0)) && lightOn.get(positionLight.get(1))) {
+						won = true;
+					}
 				}
 			}
 		}
 	}
 
 	public void setLight(int value, boolean state) {
-			if (value == positionLight.get(0))   
-				lightOn.replace(positionLight.get(0), state);
-			else if (value == positionLight.get(1))
-				lightOn.replace(positionLight.get(1), state);
+		if (value == positionLight.get(0))
+			lightOn.replace(positionLight.get(0), state);
+		else if (value == positionLight.get(1))
+			lightOn.replace(positionLight.get(1), state);
 	}
-	
+
 	public void addPwr(Brick b) {
 		for (int i = 0; i < pwrActivated.size(); i++) {
 			if (pwrActivated.get(i)) {
@@ -438,7 +439,7 @@ public class Game {
 	public boolean isLose() {
 		return lose;
 	}
-	
+
 	public boolean isWon() {
 		return won;
 	}

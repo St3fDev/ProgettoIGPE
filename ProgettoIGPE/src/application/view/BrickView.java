@@ -27,8 +27,6 @@ public class BrickView extends Common {
 			img2 = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/brick_gray_dmg2.png"));
 			img3 = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/brick_blue1.png"));
 			img4 = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/brick_red1.png"));
-			img.add(img3);
-			img.add(img4);
 			
 		} catch (IOException e) {
 			e.printStackTrace();

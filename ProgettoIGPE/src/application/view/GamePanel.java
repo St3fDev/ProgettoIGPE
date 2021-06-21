@@ -1,11 +1,14 @@
 package application.view;
 
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -25,7 +28,7 @@ public class GamePanel extends JPanel {
 	private PaddleView paddle = new PaddleView();
 	private BallView ball = new BallView();
 	private BrickView brick = new BrickView();
-	private PowerupsView pwr = new PowerupsView();
+	private PowerupsView pwrView = new PowerupsView();
 	private Image background = null;
 	private boolean game = true;
 	private boolean firstTime = true;
@@ -36,7 +39,7 @@ public class GamePanel extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		var g2d = (Graphics2D) g;
-
+		setFont();
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
@@ -46,12 +49,6 @@ public class GamePanel extends JPanel {
 		} else {
 			gameOver(g2d);
 		}
-		/*
-		 * background = ImageIO.read(getClass().getResourceAsStream(
-		 * "/application/resources/backgrounds/start.jpeg")); g.drawImage(background, 0,
-		 * 0, null);
-		 */
-		// GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 
 	}
 
@@ -61,6 +58,13 @@ public class GamePanel extends JPanel {
 			return;
 		}
 		if (!Game.getInstance().isPause() || firstTime) {
+			try {
+				background = ImageIO.read(getClass().getResourceAsStream( "/application/resources/bgLevels/prova.png"));
+				g2d.drawImage(background, 0, 0, null);
+				
+			} catch (IOException e) {
+				System.out.println("Errore nella lettura del file");
+			} 
 		if (loseLives(g2d))
 			return;
 		
@@ -76,7 +80,9 @@ public class GamePanel extends JPanel {
 			int x_ball = Game.getInstance().getBall().getX();
 			int y_ball = Game.getInstance().getBall().getY();
 			g2d.drawImage(ball.img, x_ball, y_ball, ball.dimX, ball.dimY, null);
-			g2d.drawString("TARGET: " + Game.getInstance().getScore() + "/" + Game.getInstance().dimBricks(), 700, 850);
+			g2d.setFont(new Font("Azonix", Font.PLAIN, 15));
+			g2d.setColor(Color.red);
+			g2d.drawString("TARGET: " + Game.getInstance().getScore() + "/" + Game.getInstance().dimBricks(), 650, 875);
 
 			ArrayList<Brick> bricks = Game.getInstance().getBrick();
 			for (int i = 0; i < bricks.size(); i++) {
@@ -106,19 +112,19 @@ public class GamePanel extends JPanel {
 			for (int i = 0; i < pwr.size(); i++) {
 				switch (pwr.get(i).getPower()) {
 				case Utilities.PWR_LIFE:
-					g2d.fillRect(pwr.get(i).getX(), pwr.get(i).getY(), Utilities.DIM_PWR, Utilities.DIM_PWR);
+					g2d.fillRect(pwr.get(i).getX(), pwr.get(i).getY(), Utilities.DIM_X_PWR, 25);
 					break;
 				case Utilities.PWR_LARGE_PADDLE:
-					g2d.fillRect(pwr.get(i).getX(), pwr.get(i).getY(), Utilities.DIM_PWR, Utilities.DIM_PWR);
+					g2d.fillRect(pwr.get(i).getX(), pwr.get(i).getY(), Utilities.DIM_X_PWR, Utilities.DIM_Y_PWR);
 					break;
 				case Utilities.PWR_FIREBALL:
-					g2d.fillOval(pwr.get(i).getX(), pwr.get(i).getY(), Utilities.DIM_PWR, Utilities.DIM_PWR);
+					g2d.fillRect(pwr.get(i).getX(), pwr.get(i).getY(), Utilities.DIM_X_PWR, Utilities.DIM_Y_PWR);
 					break;
 				case Utilities.NERF_VEL_BALL:
-					g2d.drawOval(pwr.get(i).getX(), pwr.get(i).getY(), Utilities.DIM_PWR, Utilities.DIM_PWR);
+					g2d.drawImage(pwrView.fastBall_img,pwr.get(i).getX(), pwr.get(i).getY(), Utilities.DIM_X_PWR, Utilities.DIM_Y_PWR, null);
 					break;
 				case Utilities.NERF_VEL_PADDLE:
-					g2d.drawOval(pwr.get(i).getX(), pwr.get(i).getY(), Utilities.DIM_PWR, Utilities.DIM_PWR);
+					g2d.drawOval(pwr.get(i).getX(), pwr.get(i).getY(), Utilities.DIM_X_PWR, Utilities.DIM_Y_PWR);
 					break;
 				default:
 					return;
@@ -142,12 +148,24 @@ public class GamePanel extends JPanel {
 			return true;
 		}
 		int cont = 0;
+		g2d.setFont(new Font("Azonix", Font.PLAIN, 15));
+		g2d.setColor(Color.red);
+		g2d.drawString("LIVES:", 22, 875);
 		while (lives > 0) {
-			g2d.drawImage(ball.img, 50 + cont, 850, 20, 20, null);
+			g2d.drawImage(ball.img, 80 + cont, 860, 20, 20, null);
 			cont += 25;
 			lives--;
 		}
 		return false;
+	}
+	
+	public void setFont() {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		try {
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Font/Azonix.otf")));
+		} catch (Exception e) {
+			System.out.println("Impossibile caricare il font");
+		}
 	}
 
 	public void update() {

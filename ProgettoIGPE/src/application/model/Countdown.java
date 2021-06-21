@@ -20,7 +20,7 @@ public class Countdown extends TimerTask {
 				Game.getInstance().getManagerTimePwr().set(idx, true);
 				if (idx == Utilities.PWR_LARGE_PADDLE) {
 					Game.getInstance().setFirstHalfPaddle(40);
-					Game.getInstance().setWidthPaddle(50);
+					Game.getInstance().setWidthLargePaddle(50);
 				}
 				if (idx == Utilities.NERF_VEL_PADDLE) 
 					Game.getInstance().getPaddle().speed = 16;
@@ -29,7 +29,7 @@ public class Countdown extends TimerTask {
 				Game.getInstance().getManagerTimePwr().set(idx, false);
 				if (idx == Utilities.PWR_LARGE_PADDLE) {
 					Game.getInstance().setFirstHalfPaddle(30);
-					Game.getInstance().setWidthPaddle(0);
+					Game.getInstance().setWidthLargePaddle(0);
 				}
 				this.cancel();
 			}

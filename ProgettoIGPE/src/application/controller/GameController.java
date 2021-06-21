@@ -50,6 +50,7 @@ public class GameController extends KeyAdapter {
 			if (e.getKeyCode() == KeyEvent.VK_R) {
 				game.restartAll();
 				gp.setGame(true);
+				game.setLose(false);
 			}
 			if (e.getKeyCode() == KeyEvent.VK_Q) {
 				System.exit(0);

@@ -34,6 +34,7 @@ public class Game {
 	private Sounds loseLife;
 	private Sounds paddleSound;
 	private Sounds gameOver;
+	private Sounds blockHit;
 	private boolean lose;
 	private boolean won;
 
@@ -44,6 +45,11 @@ public class Game {
 	}
 
 	private Game() {
+		sound = new Sounds("levelCompleted.wav");
+		loseLife = new Sounds("loseLife.wav");
+		paddleSound = new Sounds("paddle.wav");
+		gameOver = new Sounds("gameover.wav");
+		blockHit = new Sounds("block_hit.wav");
 		paddle = new Paddle();
 		paddle.x = Utilities.WIDTH_SIZE / 2 - Utilities.DIM_X_PADDLE / 2;
 		paddle.y = Utilities.HEIGHT_SIZE - 120;
@@ -65,10 +71,6 @@ public class Game {
 		managerTimePwr = new ArrayList<Boolean>();
 		lightOn = new HashMap<Integer, Boolean>();
 		positionLight = new ArrayList<Integer>();
-		sound = new Sounds("levelCompleted.wav");
-		loseLife = new Sounds("loseLife.wav");
-		paddleSound = new Sounds("paddle.wav");
-		gameOver = new Sounds("gameover.wav");
 		lives = 3;
 		score = 0;
 		velBall = 9;
@@ -128,12 +130,7 @@ public class Game {
 					|| (ball.y + Utilities.DIM_BALL >= Utilities.HEIGHT_SIZE && ball.dirY > 0))
 				ball.dirY = -ball.dirY;
 			if (ball.y <= 0 && ball.dirX == 0) {
-				Random direction = new Random();
-				int dir = direction.nextInt(2) + 1;
-				if (dir == 1)
-					ball.dirX = -1;
-				else
-					ball.dirX = 1;
+				randomDirection();
 			}
 			ballCollision();
 			int cont = 0;
@@ -146,11 +143,6 @@ public class Game {
 	}
 
 	public void ballCollision() {
-		paddleCollision();
-		brickCollision();
-	}
-
-	private void paddleCollision() {
 		if (ball.getRect().getMaxY() > Utilities.LIMIT_LINE) {
 			lives--;
 			if (lives == 0) {
@@ -161,6 +153,11 @@ public class Game {
 				loseLife.start();
 			resetGame();
 		}
+		paddleCollision();
+		brickCollision();
+	}
+
+	private void paddleCollision() {
 		if (paddle.getRect().intersects(ball.getRect())) {
 			int posPaddle = (int) paddle.getRect().getMinX();
 			int posBall = (int) ball.getRect().getMinX();
@@ -210,13 +207,14 @@ public class Game {
 				int ballTop = (int) ball.getRect().getMinY();
 
 				Point pointR = new Point(ballLeft + ballWidth + 1, ballTop);
-				Point pointR_B = new Point(ballLeft + ballWidth + 1, ballTop + ballHeight);
+				Point pointR_B = new Point(ballLeft + ballWidth + 1, ballTop + ballHeight); 
 				Point pointL = new Point(ballLeft - 1, ballTop);
 				Point pointT = new Point(ballLeft, ballTop - 1);
 				Point pointT_R = new Point(ballLeft + ballWidth, ballTop - 1);
 				Point pointB = new Point(ballLeft, ballTop + ballHeight + 1);
 
 				if (!bricks.get(i).getDestroyed()) {
+					//blockHit.start();
 					if (managerTimePwr.get(Utilities.PWR_FIREBALL)) {
 						bricks.get(i).setDestroyed(true);
 						score++;
@@ -229,16 +227,16 @@ public class Game {
 						}
 						if (bricks.get(i).resistance < 4)
 							bricks.get(i).resistance--;
+						if (bricks.get(i).getRect().contains(pointT)) {
+							if (ball.dirX == 0)
+								randomDirection();
+							ball.dirY = 1;
+						} else if (bricks.get(i).getRect().contains(pointB))
+							ball.dirY = -1;
 						if (bricks.get(i).getRect().contains(pointR))
 							ball.dirX = -1;
 						else if (bricks.get(i).getRect().contains(pointL))
 							ball.dirX = 1;
-						if (bricks.get(i).getRect().contains(pointT)) {
-							if (ball.dirX == 0)
-								ball.dirX = -1;
-							ball.dirY = 1;
-						} else if (bricks.get(i).getRect().contains(pointB))
-							ball.dirY = -1;
 						else if (bricks.get(i).getRect().contains(pointR_B))
 							ball.dirX = -1;
 						if (bricks.get(i).resistance == 4) {
@@ -267,6 +265,7 @@ public class Game {
 			lightOn.replace(positionLight.get(1), state);
 	}
 
+	//
 	public void addPwr(Brick b) {
 		for (int i = 0; i < pwrActivated.size(); i++) {
 			if (pwrActivated.get(i)) {
@@ -286,7 +285,7 @@ public class Game {
 				pwr.get(i).y += pwr.get(i).speed;
 				if (paddle.getRect().intersects(pwr.get(i).getRect())) {
 					if (pwr.get(i).getPower() == Utilities.PWR_LIFE) {
-						if (lives <= 5)
+						if (lives < 5)
 							lives++;
 					}
 					if (pwr.get(i).getPower() == Utilities.PWR_LARGE_PADDLE
@@ -303,7 +302,7 @@ public class Game {
 								1000);
 
 					if (pwr.get(i).getPower() == Utilities.NERF_VEL_BALL)
-						velBall = 14;
+						velBall = 12;
 
 					pwr.remove(i);
 				} else if (pwr.get(i).y > Utilities.LIMIT_LINE)
@@ -337,16 +336,20 @@ public class Game {
 		Random r = new Random();
 		int rand = r.nextInt(100) + 1;
 		int spawn = 0;
-		if (level == 8)
+		if (level > 5)
 			spawn = 20;
-		if (rand <= 2 && level < 6)
+		if (rand <= 2 && level < 6 && lives < 5)
 			pwrActivated.set(Utilities.PWR_LIFE, true);
-		else if (rand > 3 && rand <= 7 && level != 8)
+		
+		else if (rand > 3 && rand <= 8 && level != 8)
 			pwrActivated.set(Utilities.PWR_LARGE_PADDLE, true);
+		
 		else if (rand > 8 && rand <= 12 && level != 8)
 			pwrActivated.set(Utilities.PWR_FIREBALL, true);
+		
 		else if (rand > 12 && rand <= 17 + spawn)
 			pwrActivated.set(Utilities.NERF_VEL_BALL, true);
+		
 		else if (rand > 18 + spawn && rand <= 23)
 			pwrActivated.set(Utilities.NERF_VEL_PADDLE, true);
 	}
@@ -364,7 +367,6 @@ public class Game {
 	}
 
 	public void restartAll() {
-		lose = false;
 		level = 0;
 		lives = 3;
 		resetGame();
@@ -372,6 +374,15 @@ public class Game {
 		showCurrentLevel(Maps.getIstance().ReadMap(level));
 	}
 
+	public void randomDirection() {
+		Random direction = new Random();
+		int dir = direction.nextInt(2) + 1;
+		if (dir == 1)
+			ball.dirX = -1;
+		else
+			ball.dirX = 1;
+	}
+	
 	public ArrayList<Brick> getBrick() {
 		return bricks;
 	}
@@ -424,7 +435,7 @@ public class Game {
 		return managerTimePwr;
 	}
 
-	public void setWidthPaddle(int widthPaddle) {
+	public void setWidthLargePaddle(int widthPaddle) {
 		this.widthPaddle = widthPaddle;
 	}
 
@@ -443,4 +454,5 @@ public class Game {
 	public boolean isWon() {
 		return won;
 	}
+	
 }

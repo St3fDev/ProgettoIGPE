@@ -31,6 +31,7 @@ public class Countdown extends TimerTask {
 					Game.getInstance().setFirstHalfPaddle(30);
 					Game.getInstance().setWidthLargePaddle(0);
 				}
+				Game.getInstance().setLevelUp(false);
 				this.cancel();
 			}
 		}

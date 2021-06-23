@@ -1,6 +1,8 @@
 package application.model;
 
-public class CommonVariable {
+import java.awt.Rectangle;
+
+public abstract class CommonVariable {
 	int x;
 	int y;
 	
@@ -11,4 +13,6 @@ public class CommonVariable {
 	public int getY() {
 		return y;
 	}
+	
+	public abstract Rectangle getRect();
 }

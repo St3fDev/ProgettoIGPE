@@ -16,6 +16,7 @@ public class Powerups extends CommonVariable {
 		return power;
 	}
 	
+	@Override
 	public Rectangle getRect() {
 		return new Rectangle(x, y, Utilities.DIM_X_PWR, Utilities.DIM_Y_PWR);
 	}

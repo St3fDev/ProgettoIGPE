@@ -19,9 +19,12 @@ public class PowerupsView extends Common {
 		dimX = Utilities.DIM_X_PWR;
 		dimY = Utilities.DIM_Y_PWR;
 		try {
-			fastBall_img = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/fastBall.png"));
+			life_img = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/pwr_life.png"));
+			fireball_img = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/pwr_fireball.png"));
+			largePaddle_img = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/pwr_paddleLarge.png"));
+			slowPaddle_img = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/nerf_slowPaddle.png"));
+			fastBall_img = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/nerf_fastBall.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 	}

@@ -8,6 +8,7 @@ public class Paddle extends CommonVariable {
 	
 	int speed;
 
+	@Override
 	public Rectangle getRect() {
 		return new Rectangle(x, y, Utilities.DIM_X_PADDLE, Utilities.DIM_Y_PADDLE);
 	}

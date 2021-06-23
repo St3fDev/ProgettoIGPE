@@ -32,6 +32,7 @@ public class Brick extends CommonVariable {
 		return resistanceInit;
 	}
 	
+	@Override
 	public Rectangle getRect() {
 		return new Rectangle(x, y, Utilities.DIM_X_BRICK, Utilities.DIM_Y_BRICK);
 	}

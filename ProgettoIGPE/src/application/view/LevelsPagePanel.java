@@ -23,8 +23,12 @@ public class LevelsPagePanel extends JPanel {
 		for (int i = 0; i < 9; i++) {
 			JButton level = new JButton();
 			levels.put(i, level);
-			ImageLoader.getIstance().initLevelsButton(level, 141, k + i * 83 + 130, i);
-			this.add(level);
+			if (!LevelLocked.getIstance().readLevel(i)) {
+				ImageLoader.getIstance().initLevelsButtonLock(level, 141, k + i * 83 + 130, i + 10);
+			}
+			else
+				ImageLoader.getIstance().initLevelsButtonUnlock(level, 141, k + i * 83 + 130, i);
+			this.add(level);	
 			k+=2;
 		}
 		backToHome = new JButton();

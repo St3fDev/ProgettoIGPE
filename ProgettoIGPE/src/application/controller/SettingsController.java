@@ -22,6 +22,7 @@ public class SettingsController extends MouseAdapter {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getSource() == backToHome) {
+			ManagerSoundBotton.getIstance().pressBotton();
 			Main.startPage.setEnabled(true);
 			SettingsPage.settingsPage.dispose();
 		}

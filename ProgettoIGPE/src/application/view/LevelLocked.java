@@ -1,8 +1,12 @@
 package application.view;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+
+import javax.swing.JOptionPane;
 
 public class LevelLocked {
 
@@ -31,8 +35,20 @@ public class LevelLocked {
 		return unlock;
 	}
 	
-	//******************da fare quando si finisce il lvl 8*****************//
 	public void setAllUnlocked() {
-		
+		String[] level = new String[9];
+		for (int i = 0; i < 9; i++) {
+			level[i] = i + ";true";
+		}
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(getClass().getResource("/application/resources/file/levelLock.txt").getFile(), false));
+			for (int i = 0; i < 9; i++) {			
+				writer.write(level[i]);
+				writer.newLine();
+			}
+			writer.close();
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "can't find the object levelLock.txt", "ERROR", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 }

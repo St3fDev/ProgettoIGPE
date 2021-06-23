@@ -11,9 +11,9 @@ import javax.swing.JFrame;
 import application.LevelsPage;
 import application.Main;
 import application.SettingsPage;
-import application.config.Sounds;
 import application.view.HomePagePanel;
 import application.view.ImageLoader;
+import application.view.Sounds;
 
 public class HomeController extends MouseAdapter {
 
@@ -25,7 +25,7 @@ public class HomeController extends MouseAdapter {
 	
 	public HomeController(HomePagePanel homePage) {
 		this.homePage = homePage;
-		//bottonEffect = new Sounds("oraVa.wav");
+		bottonEffect = new Sounds("botton.wav");
 		exit = homePage.getExitButton();
 		start = homePage.getStartButton();
 		settings = homePage.getSettingsButton();
@@ -37,17 +37,18 @@ public class HomeController extends MouseAdapter {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getSource() == exit) {
-			//bottonEffect.start();
+			ManagerSoundBotton.getIstance().pressBotton();
 			System.exit(0);
 		}
 		
 		if (e.getSource() == start) {
-			//bottonEffect.start();
+			ManagerSoundBotton.getIstance().pressBotton();
 			Main.startPage.setVisible(false);
 			LevelsPage lp = new LevelsPage();
 		}
 		if (e.getSource() == settings) {
 			//Main.startPage.setVisible(false);
+			ManagerSoundBotton.getIstance().pressBotton();
 			Main.startPage.setEnabled(false);
 			SettingsPage sp = new SettingsPage();
 		}

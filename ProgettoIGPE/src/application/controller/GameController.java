@@ -22,7 +22,7 @@ public class GameController extends KeyAdapter {
 	}
 
 	public void update() {
-		if (!game.isLose() && !game.isWon()) {
+		if (!game.isLose() && !game.isWon() && !game.isLevelUp()) {
 			game.updateBall();
 			game.pwrCollision();
 		}
@@ -32,11 +32,11 @@ public class GameController extends KeyAdapter {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (!game.isLose() && !game.isWon()) {
-			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) {
 				game.movePaddle(1);
 				game.setPause(false);
 				gp.setFirstTime(false);
-			} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			} else if (e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D) {
 				game.movePaddle(0);
 				game.setPause(false);
 				gp.setFirstTime(false);
@@ -51,6 +51,7 @@ public class GameController extends KeyAdapter {
 				game.restartAll();
 				gp.setGame(true);
 				game.setLose(false);
+				game.setWon(false);
 			}
 			if (e.getKeyCode() == KeyEvent.VK_Q) {
 				System.exit(0);

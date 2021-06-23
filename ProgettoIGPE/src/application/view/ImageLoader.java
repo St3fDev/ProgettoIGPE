@@ -56,7 +56,18 @@ public class ImageLoader {
 		e.setContentAreaFilled(false);
 	}
 	
-	public void initLevelsButton(JButton b, int x, int y, int i) {
+	public void initLevelsButtonUnlock(JButton b, int x, int y, int i) {
+		ImageIcon levels;
+		levels = new ImageIcon(getClass().getResource("/application/resources/levels/"+ i +".png").getPath());
+		b.setIcon(levels);
+		b.setBounds(x,y,523,82);
+		b.setFocusable(false);
+		b.setOpaque(false);
+		b.setBorder(BorderFactory.createEmptyBorder());
+		b.setContentAreaFilled(false);
+	}
+	
+	public void initLevelsButtonLock(JButton b, int x, int y, int i) {
 		ImageIcon levels;
 		levels = new ImageIcon(getClass().getResource("/application/resources/levels/"+ i +".png").getPath());
 		b.setIcon(levels);

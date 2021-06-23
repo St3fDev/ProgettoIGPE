@@ -9,6 +9,7 @@ public class Ball extends CommonVariable {
 	int dirX;
 	int dirY;
 
+	@Override
 	public Rectangle getRect() {
 		return new Rectangle(x, y, Utilities.DIM_BALL, Utilities.DIM_BALL);
 	}

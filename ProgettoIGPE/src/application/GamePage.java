@@ -3,11 +3,11 @@ package application;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import application.config.Sounds;
 import application.config.Utilities;
 import application.controller.GameController;
 import application.model.Game;
 import application.view.GamePanel;
+import application.view.Sounds;
 
 public class GamePage {
 	

@@ -32,6 +32,7 @@ public class LevelsController extends MouseAdapter {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getSource() == backToHome) {
+			ManagerSoundBotton.getIstance().pressBotton();
 			Main.startPage.setVisible(true);
 			LevelsPage.levels.dispose();
 		}
@@ -39,7 +40,8 @@ public class LevelsController extends MouseAdapter {
 			if (e.getSource() == levels.get(i)) {
 				boolean unlock = LevelLocked.getIstance().readLevel(i);
 				if (unlock) {
-					//Main.soundMenu.stop();
+					ManagerSoundBotton.getIstance().pressBotton();
+					Main.soundMenu.stop();
 					LevelsPage.levels.dispose();
 					GamePage gp = new GamePage(i);	
 				}

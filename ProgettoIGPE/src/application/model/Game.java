@@ -310,9 +310,10 @@ public class Game {
 			for (int i = 0; i < pwr.size(); i++) {
 				pwr.get(i).y += pwr.get(i).speed;
 				if (paddle.getRect().intersects(pwr.get(i).getRect())) {
-					if (pwr.get(i).getPower() < 4)
+					if (pwr.get(i).getPower() < 4) {
 						if (Utilities.audioOn)
 							power_up.restart();
+					}
 					else {
 						if (Utilities.audioOn)
 							nerf.restart();

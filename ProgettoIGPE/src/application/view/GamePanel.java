@@ -33,12 +33,14 @@ public class GamePanel extends JPanel {
 	private Image background = null;
 	private Image gameOver = null;
 	private Image paused = null;
+	private Image levelUp = null;
 	private Image win = null;
 	private boolean game = true;
 	private boolean firstTime = true;
 
 	public GamePanel() {
 		try {
+			levelUp = ImageIO.read(getClass().getResourceAsStream( "/application/resources/backgrounds/levelUp.png"));
 			gameOver = ImageIO.read(getClass().getResourceAsStream( "/application/resources/backgrounds/gameOver.png"));
 			paused = ImageIO.read(getClass().getResourceAsStream( "/application/resources/backgrounds/pause.png"));
 			win = ImageIO.read(getClass().getResourceAsStream( "/application/resources/backgrounds/win.png"));
@@ -67,7 +69,7 @@ public class GamePanel extends JPanel {
 
 	public void inGame(Graphics2D g2d) {
 		if (Game.getInstance().isLevelUp()) {
-			g2d.drawString("LEVEL UP!!!!", 400, 500);
+			g2d.drawImage(levelUp, 0, 0, null);
 			return;
 		}
 		if (Game.getInstance().isWon()) {

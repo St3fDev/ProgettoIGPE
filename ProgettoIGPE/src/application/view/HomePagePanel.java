@@ -2,7 +2,9 @@ package application.view;
 
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -37,9 +39,13 @@ public class HomePagePanel extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		var g2d = (Graphics2D) g;
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		try {
 			background = ImageIO.read(getClass().getResourceAsStream("/application/resources/backgrounds/start.jpeg"));
-			g.drawImage(background, 0, 0, null);
+			g2d.drawImage(background, 0, 0, null);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

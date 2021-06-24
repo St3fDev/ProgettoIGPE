@@ -1,8 +1,10 @@
 package application.view;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
+import  javax.swing.ImageIcon;
 import javax.swing.JButton;
+
+import application.config.Utilities;
 
 public class ImageLoader {
 
@@ -17,9 +19,9 @@ public class ImageLoader {
 	public void initStartButton(JButton sb, int pos) {
 		ImageIcon start = null;
 		if (pos == 0)
-			start = new ImageIcon(getClass().getResource("/application/resources/home/startButton.png").getPath());
+			start = new ImageIcon(getClass().getResource("/application/resources/icons/startButton.png").getPath());
 		else if (pos == 1)
-			start = new ImageIcon(getClass().getResource("/application/resources/home/startButton2.png").getPath());
+			start = new ImageIcon(getClass().getResource("/application/resources/icons/startButton2.png").getPath());
 		sb.setIcon(start);
 		sb.setBounds(270,400,259,85);
 		sb.setFocusable(false);
@@ -31,9 +33,9 @@ public class ImageLoader {
 	public void initSettingButton(JButton sb, int pos) {
 		ImageIcon settings = null;
 		if (pos == 0)
-			settings = new ImageIcon(getClass().getResource("/application/resources/home/settingsButton.png").getPath());
+			settings = new ImageIcon(getClass().getResource("/application/resources/icons/settingsButton.png").getPath());
 		else if (pos == 1)
-			settings = new ImageIcon(getClass().getResource("/application/resources/home/settingsButton2.png").getPath());
+			settings = new ImageIcon(getClass().getResource("/application/resources/icons/settingsButton2.png").getPath());
 		sb.setIcon(settings);
 		sb.setBounds(250,550,299,85);
 		sb.setFocusable(false);
@@ -42,18 +44,18 @@ public class ImageLoader {
 		sb.setContentAreaFilled(false);
 	}
 	
-	public void initExitButton(JButton e, int pos) {
+	public void initExitButton(JButton b, int pos) {
 		ImageIcon exit = null;
 		if (pos == 0)
-			exit = new ImageIcon(getClass().getResource("/application/resources/home/exitButton.png").getPath());
+			exit = new ImageIcon(getClass().getResource("/application/resources/icons/exitButton.png").getPath());
 		else if (pos == 1)
-			exit = new ImageIcon(getClass().getResource("/application/resources/home/exitButton2.png").getPath());
-		e.setIcon(exit);
-		e.setBounds(307,810,179,82);
-		e.setFocusable(false);
-		e.setOpaque(false);
-		e.setBorder(BorderFactory.createEmptyBorder());
-		e.setContentAreaFilled(false);
+			exit = new ImageIcon(getClass().getResource("/application/resources/icons/exitButton2.png").getPath());
+		b.setIcon(exit);
+		b.setBounds(307,810,179,82);
+		b.setFocusable(false);
+		b.setOpaque(false);
+		b.setBorder(BorderFactory.createEmptyBorder());
+		b.setContentAreaFilled(false);
 	}
 	
 	public void initLevelsButtonUnlock(JButton b, int x, int y, int i) {
@@ -80,9 +82,37 @@ public class ImageLoader {
 	
 	public void backBotton(JButton b) {
 		ImageIcon backBotton;
-		backBotton = new ImageIcon(getClass().getResource("/application/resources/home/home1.png").getPath());
+		backBotton = new ImageIcon(getClass().getResource("/application/resources/icons/back.png").getPath());
 		b.setIcon(backBotton);
 		b.setBounds(40,50,50,50);
+		b.setFocusable(false);
+		b.setOpaque(false);
+		b.setBorder(BorderFactory.createEmptyBorder());
+		b.setContentAreaFilled(false);
+	}
+	
+	public void initAudioBotton(JButton b) {
+		ImageIcon audioBotton;
+		if (Utilities.audioOn)
+			audioBotton = new ImageIcon(getClass().getResource("/application/resources/icons/audioOn.png").getPath());
+		else 
+			audioBotton = new ImageIcon(getClass().getResource("/application/resources/icons/audioOff.png").getPath());
+		b.setIcon(audioBotton);
+		b.setBounds(100,170,80,80);
+		b.setFocusable(false);
+		b.setOpaque(false);
+		b.setBorder(BorderFactory.createEmptyBorder());
+		b.setContentAreaFilled(false);
+	}
+	
+	public void initSoundBotton(JButton b) {
+		ImageIcon musicBotton;
+		if (Utilities.musicOn)
+			musicBotton = new ImageIcon(getClass().getResource("/application/resources/icons/musicOn.png").getPath());
+		else 
+			musicBotton = new ImageIcon(getClass().getResource("/application/resources/icons/musicOff.png").getPath());
+		b.setIcon(musicBotton);
+		b.setBounds(220,170,80,80);
 		b.setFocusable(false);
 		b.setOpaque(false);
 		b.setBorder(BorderFactory.createEmptyBorder());

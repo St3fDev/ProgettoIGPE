@@ -16,7 +16,7 @@ public class SettingsPage {
 		SettingsPagePanel sp = new SettingsPagePanel();
 		SettingsController controller = new SettingsController(sp);
 		
-		settingsPage.setSize(500, 500);
+		settingsPage.setSize(400, 400);
 		settingsPage.setLocationRelativeTo(null);
 		settingsPage.add(sp);
 		settingsPage.setUndecorated(true);

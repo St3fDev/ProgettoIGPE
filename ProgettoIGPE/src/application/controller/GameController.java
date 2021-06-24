@@ -10,6 +10,7 @@ import application.GamePage;
 import application.LevelsPage;
 import application.model.Game;
 import application.view.GamePanel;
+import application.view.LevelLocked;
 import application.view.Maps;
 
 public class GameController extends KeyAdapter {
@@ -31,7 +32,13 @@ public class GameController extends KeyAdapter {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (!game.isLose() && !game.isWon()) {
+		if (LevelLocked.getIstance().readAbout()) {
+			if (e.getKeyCode() == KeyEvent.VK_C) {
+				LevelLocked.getIstance().setFirstGame();
+				return;
+			}
+		}
+		else if (!game.isLose() && !game.isWon()) {
 			if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) {
 				game.movePaddle(1);
 				game.setPause(false);

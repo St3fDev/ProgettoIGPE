@@ -1,5 +1,6 @@
 package application.controller;
 
+import application.config.Utilities;
 import application.view.Sounds;
 
 public class ManagerSoundBotton {
@@ -15,7 +16,8 @@ public class ManagerSoundBotton {
 	
 	public void pressBotton() {
 		bottonEffect = new Sounds("botton.wav");
-		bottonEffect.start();
+		if (Utilities.audioOn)
+			bottonEffect.start();
 	}
 	
 	public void SoundMenu() {

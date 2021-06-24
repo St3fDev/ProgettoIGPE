@@ -22,6 +22,6 @@ public class Utilities {
 	public static final int PWR_FIREBALL = 3;
 	public static final int NERF_VEL_PADDLE = 4;
 	public static final int NERF_VEL_BALL = 5;
-	public static final String GAME_OVER = "GAME OVER";
-	
+	public static boolean audioOn = true;
+	public static boolean musicOn = true;
 }

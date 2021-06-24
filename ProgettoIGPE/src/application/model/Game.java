@@ -126,7 +126,8 @@ public class Game {
 			}
 			if (bricksBroken == bricks.size()) {
 				timer.schedule(new Countdown(3, 0), 0, 1000);
-				sound.start();
+				if (Utilities.audioOn)
+					sound.restart();
 				levelUp = true;
 				level++;
 				score = 0;
@@ -164,7 +165,8 @@ public class Game {
 				gameOver.start();
 				return;
 			} else
-				loseLife.start();
+				if (Utilities.audioOn)
+					loseLife.start();
 			resetGame();
 		}
 		paddleCollision();
@@ -175,7 +177,8 @@ public class Game {
 		if (paddle.getRect().intersects(ball.getRect())) {
 			int posPaddle = (int) paddle.getRect().getMinX();
 			int posBall = (int) ball.getRect().getMinX();
-			paddleSound.start();
+			if (Utilities.audioOn)
+				paddleSound.start();
 			int firstHalf = posPaddle + firstHalfPaddle;
 			int secondHalf = posPaddle + firstHalfPaddle * 2;
 			int thirdHalf = posPaddle + firstHalfPaddle * 3;
@@ -228,10 +231,14 @@ public class Game {
 				Point pointB = new Point(ballLeft, ballTop + ballHeight + 1);
 				
 				if (!bricks.get(i).getDestroyed()) {
-					if (count_sound % 2 == 0)  
-						blockHit.restart();
-					else 
-						block_hit2.restart();
+					if (count_sound % 2 == 0) {
+						if (Utilities.audioOn)
+							blockHit.restart();
+					}
+					else {
+						if (Utilities.audioOn)
+							block_hit2.restart();
+					}
 					count_sound++;
 					if (managerTimePwr.get(Utilities.PWR_FIREBALL)) {
 						bricks.get(i).setDestroyed(true);
@@ -304,9 +311,12 @@ public class Game {
 				pwr.get(i).y += pwr.get(i).speed;
 				if (paddle.getRect().intersects(pwr.get(i).getRect())) {
 					if (pwr.get(i).getPower() < 4)
-						power_up.restart();
-					else 
-						nerf.restart();
+						if (Utilities.audioOn)
+							power_up.restart();
+					else {
+						if (Utilities.audioOn)
+							nerf.restart();
+					}
 					if (pwr.get(i).getPower() == Utilities.PWR_LIFE) {
 						if (lives < 5)
 							lives++;
@@ -373,7 +383,7 @@ public class Game {
 		else if (rand > 13 && rand <= 17 + spawn)
 			pwrActivated.set(Utilities.NERF_VEL_BALL, true);
 		
-		else if (rand > 18 + spawn && rand <= 23)
+		else if (rand > 18 + spawn && rand <= 23 + spawn)
 			pwrActivated.set(Utilities.NERF_VEL_PADDLE, true);
 	}
 

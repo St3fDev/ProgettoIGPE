@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 
 import application.config.Utilities;
 import application.model.Brick;
+import application.model.Countdown;
 import application.model.Game;
 import application.model.Powerups;
 
@@ -79,6 +80,10 @@ public class GamePanel extends JPanel {
 			System.out.println("Errore nella lettura del file");
 		} 
 		if (!Game.getInstance().isPause() || firstTime) {
+			if (LevelLocked.getIstance().readAbout()) {
+				g2d.drawString("COSE A CASO", 400, 500);
+				return;
+			}
 			g2d.drawImage(background, 0, 0, null);
 		if (loseLives(g2d))
 			return;
@@ -111,12 +116,16 @@ public class GamePanel extends JPanel {
 						if (bricks.get(i).getLivesBrick() == 2)
 							g2d.drawImage(brick.img1, bricks.get(i).getX(), bricks.get(i).getY(), brick.dimX, brick.dimY,
 									null);
-						if (bricks.get(i).getLivesBrick() == 1)
+						else 
 							g2d.drawImage(brick.img2, bricks.get(i).getX(), bricks.get(i).getY(), brick.dimX,
 									brick.dimY, null);
 					} else if (bricks.get(i).getResistance() == Utilities.BRICK_RES_3){
-						g2d.fillRect(bricks.get(i).getX(), bricks.get(i).getY(), Utilities.DIM_X_BRICK,
-								Utilities.DIM_Y_BRICK);
+						if (bricks.get(i).getLivesBrick() == 3)
+							g2d.drawImage(brick.img3, bricks.get(i).getX(), bricks.get(i).getY(), brick.dimX, brick.dimY, null);
+						else if (bricks.get(i).getLivesBrick() == 2)
+							g2d.drawImage(brick.img4, bricks.get(i).getX(), bricks.get(i).getY(), brick.dimX, brick.dimY, null);
+						else 
+							g2d.drawImage(brick.img5, bricks.get(i).getX(), bricks.get(i).getY(), brick.dimX, brick.dimY, null);	
 					}
 					else if (bricks.get(i).getResistance() == Utilities.BRICK_LIGHT) {
 						if (bricks.get(i).getLivesBrick() == Utilities.BRICK_LIGHT)

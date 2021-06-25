@@ -23,7 +23,7 @@ public class ImageLoader {
 		else if (pos == 1)
 			start = new ImageIcon(getClass().getResource("/application/resources/icons/startButton2.png").getPath());
 		sb.setIcon(start);
-		sb.setBounds(270,400,259,85);
+		sb.setBounds(280,310,216,54);
 		sb.setFocusable(false);
 		sb.setOpaque(false);
 		sb.setBorder(BorderFactory.createEmptyBorder());
@@ -37,7 +37,7 @@ public class ImageLoader {
 		else if (pos == 1)
 			settings = new ImageIcon(getClass().getResource("/application/resources/icons/settingsButton2.png").getPath());
 		sb.setIcon(settings);
-		sb.setBounds(250,550,299,85);
+		sb.setBounds(255,410,265,56);
 		sb.setFocusable(false);
 		sb.setOpaque(false);
 		sb.setBorder(BorderFactory.createEmptyBorder());
@@ -51,7 +51,7 @@ public class ImageLoader {
 		else if (pos == 1)
 			exit = new ImageIcon(getClass().getResource("/application/resources/icons/exitButton2.png").getPath());
 		b.setIcon(exit);
-		b.setBounds(307,810,179,82);
+		b.setBounds(290,550,190,48);
 		b.setFocusable(false);
 		b.setOpaque(false);
 		b.setBorder(BorderFactory.createEmptyBorder());

@@ -44,7 +44,7 @@ public class HomePagePanel extends JPanel {
 
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		try {
-			background = ImageIO.read(getClass().getResourceAsStream("/application/resources/backgrounds/start.jpeg"));
+			background = ImageIO.read(getClass().getResourceAsStream("/application/resources/backgrounds/start.png"));
 			g2d.drawImage(background, 0, 0, null);
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -1,13 +1,15 @@
 package application.view;
 
-
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -23,13 +25,14 @@ public class HomePagePanel extends JPanel {
 	boolean settingsOn;
 	
 	public HomePagePanel() {
+		Image cursor = new ImageIcon(getClass().getResource("/application/resources/icons/cursor.png")).getImage();
+		setCursor(Toolkit.getDefaultToolkit().createCustomCursor(cursor, new Point(0,0), ""));
 		startButton = new JButton();
 		settingsButton = new JButton();
 		exitButton = new JButton();
 		ImageLoader.getIstance().initStartButton(startButton, 0);
 		ImageLoader.getIstance().initSettingButton(settingsButton, 0);
 		ImageLoader.getIstance().initExitButton(exitButton, 0);
-		
 		this.add(exitButton);
 		this.add(settingsButton);
 		this.add(startButton);

@@ -2,16 +2,14 @@ package application.controller;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+
 
 import javax.swing.JOptionPane;
 
-import application.GamePage;
-import application.LevelsPage;
 import application.model.Game;
 import application.view.GamePanel;
 import application.view.LevelLocked;
-import application.view.Maps;
+
 
 public class GameController extends KeyAdapter {
 

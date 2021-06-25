@@ -16,6 +16,7 @@ public class ManagerSoundBotton {
 	
 	public void pressBotton() {
 		bottonEffect = new Sounds("botton.wav");
+		bottonEffect.reduceVolume();
 		if (Utilities.audioOn)
 			bottonEffect.start();
 	}

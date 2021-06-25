@@ -3,10 +3,13 @@ package application.view;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -20,6 +23,8 @@ public class SettingsPagePanel extends JPanel {
 	Image background;
 	
 	public SettingsPagePanel() {
+		Image cursor = new ImageIcon(getClass().getResource("/application/resources/icons/cursor.png")).getImage();
+		setCursor(Toolkit.getDefaultToolkit().createCustomCursor(cursor, new Point(0,0), ""));
 		audioActiveted = new JButton();
 		musicActiveted = new JButton();
 		backToHome = new JButton();

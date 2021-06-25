@@ -15,6 +15,8 @@ public class BrickView extends Common {
 	Image img3;
 	Image img4;
 	Image img5;
+	Image imgLightOn;
+	Image imgLightOff;
 	ArrayList<Image> img;
 	
 	public BrickView() {
@@ -27,6 +29,8 @@ public class BrickView extends Common {
 			img3 = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/black3.png"));
 			img4 = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/black2.png"));
 			img5 = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/black_dmg2.png"));
+			imgLightOn = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/lightOn.png"));
+			imgLightOff = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/lightOff.png"));
 			for (int i = 0; i < 9; i++) {
 				img.add(ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/" + i + ".png")));
 			}

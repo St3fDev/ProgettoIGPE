@@ -7,7 +7,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,13 +35,17 @@ public class GamePanel extends JPanel {
 	private Image background = null;
 	private Image gameOver = null;
 	private Image paused = null;
+	private Image about = null;
 	private Image levelUp = null;
 	private Image win = null;
 	private boolean game = true;
 	private boolean firstTime = true;
 
 	public GamePanel() {
+		Image cursor = new ImageIcon(getClass().getResource("/application/resources/icons/cursor.png")).getImage();
+		setCursor(Toolkit.getDefaultToolkit().createCustomCursor(cursor, new Point(0,0), ""));
 		try {
+			about = ImageIO.read(getClass().getResourceAsStream( "/application/resources/backgrounds/about.png"));
 			levelUp = ImageIO.read(getClass().getResourceAsStream( "/application/resources/backgrounds/levelUp.png"));
 			gameOver = ImageIO.read(getClass().getResourceAsStream( "/application/resources/backgrounds/gameOver.png"));
 			paused = ImageIO.read(getClass().getResourceAsStream( "/application/resources/backgrounds/pause.png"));
@@ -83,22 +89,15 @@ public class GamePanel extends JPanel {
 		} 
 		if (!Game.getInstance().isPause() || firstTime) {
 			if (LevelLocked.getIstance().readAbout()) {
-				g2d.drawString("COSE A CASO", 400, 500);
+				g2d.drawImage(about, 0, 0, null);
 				return;
 			}
 			g2d.drawImage(background, 0, 0, null);
 		if (loseLives(g2d))
 			return;
-		
-			int x_paddle = Game.getInstance().getPaddle().getX();
-			int y_paddle = Game.getInstance().getPaddle().getY();
-			if (Game.getInstance().getManagerTimePwr().get(Utilities.PWR_LARGE_PADDLE)) {
-				paddle.setDimX(200);
-				g2d.drawImage(paddle.img2, x_paddle, y_paddle, paddle.dimX, paddle.dimY, null);
-			} else {
-				paddle.setDimX(Utilities.DIM_X_PADDLE);
-				g2d.drawImage(paddle.img, x_paddle, y_paddle, paddle.dimX, paddle.dimY, null);
-			}
+			
+			drawPaddle(g2d);
+			
 			int x_ball = Game.getInstance().getBall().getX();
 			int y_ball = Game.getInstance().getBall().getY();
 			if (Game.getInstance().getManagerTimePwr().get(Utilities.PWR_FIREBALL))
@@ -107,8 +106,10 @@ public class GamePanel extends JPanel {
 				g2d.drawImage(ball.img, x_ball, y_ball, ball.dimX, ball.dimY, null);
 			g2d.setFont(new Font("Azonix", Font.PLAIN, 15));
 			g2d.setColor(Color.red);
-			g2d.drawString("TARGET: " + Game.getInstance().getScore() + "/" + Game.getInstance().dimBricks(), 650, 875);
-
+			if (Game.getInstance().getLevel() < 8)
+				g2d.drawString("TARGET: " + Game.getInstance().getScore() + "/" + Game.getInstance().dimBricks(), 650, 875);
+			else 
+				g2d.drawString("TARGET: ", 650, 875);
 			ArrayList<Brick> bricks = Game.getInstance().getBrick();
 			for (int i = 0; i < bricks.size(); i++) {
 				if (!bricks.get(i).getDestroyed()) {
@@ -131,9 +132,9 @@ public class GamePanel extends JPanel {
 					}
 					else if (bricks.get(i).getResistance() == Utilities.BRICK_LIGHT) {
 						if (bricks.get(i).getLivesBrick() == Utilities.BRICK_LIGHT)
-							g2d.fillRect(bricks.get(i).getX(), bricks.get(i).getY(), Utilities.DIM_X_BRICK, Utilities.DIM_Y_BRICK);
+							g2d.drawImage(brick.imgLightOn, bricks.get(i).getX(), bricks.get(i).getY(), Utilities.DIM_X_BRICK, Utilities.DIM_Y_BRICK, null);
 						else 
-							g2d.drawRect(bricks.get(i).getX(), bricks.get(i).getY(), Utilities.DIM_X_BRICK, Utilities.DIM_Y_BRICK);
+							g2d.drawImage(brick.imgLightOff, bricks.get(i).getX(), bricks.get(i).getY(), Utilities.DIM_X_BRICK, Utilities.DIM_Y_BRICK, null);
 					}
 				}
 			}
@@ -165,6 +166,18 @@ public class GamePanel extends JPanel {
 		}
 	}
 
+	public void drawPaddle(Graphics2D g2d) {
+		int x_paddle = Game.getInstance().getPaddle().getX();
+		int y_paddle = Game.getInstance().getPaddle().getY();
+		if (Game.getInstance().getManagerTimePwr().get(Utilities.PWR_LARGE_PADDLE)) {
+			paddle.setDimX(200);
+			g2d.drawImage(paddle.img2, x_paddle, y_paddle, paddle.dimX, paddle.dimY, null);
+		} else {
+			paddle.setDimX(Utilities.DIM_X_PADDLE);
+			g2d.drawImage(paddle.img, x_paddle, y_paddle, paddle.dimX, paddle.dimY, null);
+		}
+	}
+	
 	public void gameOver(Graphics2D g2d) {
 		g2d.drawImage(gameOver, 0, 0, null);
 	}

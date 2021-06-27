@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 import application.config.Utilities;
 
@@ -19,8 +20,7 @@ public class BallView extends Common {
 			img = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/ball.png"));
 			fireball_img = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/fireball.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "errore nella gestione delle icone della palla", "ERRORE", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }

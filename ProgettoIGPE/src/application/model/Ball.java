@@ -4,7 +4,7 @@ import java.awt.Rectangle;
 
 import application.config.Utilities;
 
-public class Ball extends CommonVariable {
+public class Ball extends CommonVariables {
 
 	int dirX;
 	int dirY;

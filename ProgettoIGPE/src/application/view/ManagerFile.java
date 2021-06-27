@@ -8,16 +8,17 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
-public class LevelLocked {
+public class ManagerFile {
 
-	private static LevelLocked level = null;
+	private static ManagerFile managerFile = null;
 	
-	public static LevelLocked getIstance() {
-		if (level == null) 
-			level = new LevelLocked();
-		return level;
+	public static ManagerFile getIstance() {
+		if (managerFile == null) 
+			managerFile = new ManagerFile();
+		return managerFile;
 	}
 	
+	// legge il file di testo e controlla se il livello è sbloccato
 	public boolean readLevel(int i) {
 		boolean unlock = false;
 		try {
@@ -30,10 +31,11 @@ public class LevelLocked {
 				}
 			}
 		} catch (IOException e) {
-			System.err.println("Errore nella lettura del file levelLock.txt");
+			JOptionPane.showMessageDialog(null, "errore nella gestione del file levelLock.txt", "ERRORE", JOptionPane.ERROR_MESSAGE);
 		}
 		return unlock;
 	}
+	
 	
 	public void setAllUnlocked() {
 		String[] level = new String[9];
@@ -48,7 +50,7 @@ public class LevelLocked {
 			}
 			writer.close();
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "can't find the object levelLock.txt", "ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "errore nella gestione del file levelLock.txt", "ERRORE", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
@@ -62,7 +64,7 @@ public class LevelLocked {
 					about = true;
 			}
 		} catch (IOException e) {
-			System.err.println("Errore nella lettura del file levelLock.txt");
+			JOptionPane.showMessageDialog(null, "errore nella gestione del file firstGame.txt", "ERRORE", JOptionPane.ERROR_MESSAGE);
 		}
 		return about;
 	}
@@ -73,7 +75,7 @@ public class LevelLocked {
 			writer.write("false");
 			writer.close();
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "can't find the object firstGame.txt", "ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "errore nella gestione del file firstGame.txt", "ERRORE", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }

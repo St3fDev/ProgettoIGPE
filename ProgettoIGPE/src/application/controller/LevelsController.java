@@ -5,13 +5,13 @@ import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 
 import application.GamePage;
 import application.LevelsPage;
 import application.Main;
-import application.view.LevelLocked;
+import application.view.ManagerFile;
 import application.view.LevelsPagePanel;
+import application.view.ManagerSoundBotton;
 
 public class LevelsController extends MouseAdapter {
 
@@ -38,7 +38,7 @@ public class LevelsController extends MouseAdapter {
 		}
 		for (int i: levels.keySet()) {
 			if (e.getSource() == levels.get(i)) {
-				boolean unlock = LevelLocked.getIstance().readLevel(i);
+				boolean unlock = ManagerFile.getIstance().readLevel(i);
 				if (unlock) {
 					ManagerSoundBotton.getIstance().pressBotton();
 					Main.soundMenu.stop();
@@ -48,11 +48,5 @@ public class LevelsController extends MouseAdapter {
 			}
 		}
 	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {}
-
-	@Override
-	public void mouseExited(MouseEvent e) {}
 
 }

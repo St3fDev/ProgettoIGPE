@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
+
 public class Maps {
 	
 	private static Maps maps = null;
@@ -28,7 +30,7 @@ public class Maps {
 				i++;
 			}	 
 		} catch (IOException e) {
-			System.out.println("Errore nella lettura del file " + level + ".txt");
+			JOptionPane.showMessageDialog(null, "errore nella gestione del file" + level + ".txt", "ERRORE", JOptionPane.ERROR_MESSAGE);
 		}
 		
 		return livello;

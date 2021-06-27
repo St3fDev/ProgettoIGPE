@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 
 import application.model.Game;
 import application.view.GamePanel;
-import application.view.LevelLocked;
+import application.view.ManagerFile;
 
 
 public class GameController extends KeyAdapter {
@@ -30,9 +30,9 @@ public class GameController extends KeyAdapter {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (LevelLocked.getIstance().readAbout()) {
+		if (ManagerFile.getIstance().readAbout()) {
 			if (e.getKeyCode() == KeyEvent.VK_C) {
-				LevelLocked.getIstance().setFirstGame();
+				ManagerFile.getIstance().setFirstGame();
 				return;
 			}
 		}

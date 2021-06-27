@@ -2,9 +2,10 @@ package application.view;
 
 import java.awt.Image;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 import application.config.Utilities;
 
@@ -17,12 +18,12 @@ public class BrickView extends Common {
 	Image img5;
 	Image imgLightOn;
 	Image imgLightOff;
-	ArrayList<Image> img;
+	Vector<Image> img;
 	
 	public BrickView() {
 		dimX = Utilities.DIM_X_BRICK;
 		dimY = Utilities.DIM_Y_BRICK;
-		img = new ArrayList<Image>();
+		img = new Vector<Image>();
 		try {
 			img1 = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/gray2.png"));
 			img2 = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/gray_dmg2.png"));
@@ -36,7 +37,7 @@ public class BrickView extends Common {
 			}
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "errore nella gestione delle icone dei brick", "ERRORE", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }

@@ -8,6 +8,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.JOptionPane;
 
 public class Sounds {
 
@@ -21,7 +22,7 @@ public class Sounds {
 			clip.open(audioIn);
 		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
 			clip = null;
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "errore nella gestione dei file audio", "ERRORE", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

@@ -2,7 +2,7 @@ package application.model;
 
 import java.awt.Rectangle;
 
-public abstract class CommonVariable {
+public abstract class CommonVariables {
 	int x;
 	int y;
 	

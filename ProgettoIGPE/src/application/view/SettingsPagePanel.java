@@ -11,6 +11,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class SettingsPagePanel extends JPanel {
@@ -60,7 +61,7 @@ public class SettingsPagePanel extends JPanel {
 			background = ImageIO.read(getClass().getResourceAsStream("/application/resources/backgrounds/settings.png"));
 			g2d.drawImage(background, 0, 0, null);
 		} catch (IOException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "errore nella gestione dell'immagine settings.png", "ERRORE", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }

@@ -11,10 +11,9 @@ public class Main {
 
 	public static JFrame startPage;
 	public static Sounds soundMenu;
-
+	
 	public static void main(String[] args) {
 		startPage = new JFrame();
-
 		startPage.setSize(Utilities.WIDTH_SIZE, Utilities.HEIGHT_SIZE);
 		HomePagePanel start = new HomePagePanel();
 		HomeController home = new HomeController(start);

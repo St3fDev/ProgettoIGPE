@@ -8,6 +8,7 @@ import application.Main;
 import application.SettingsPage;
 import application.config.Utilities;
 import application.view.ImageLoader;
+import application.view.ManagerSoundBotton;
 import application.view.SettingsPagePanel;
 
 public class SettingsController extends MouseAdapter {

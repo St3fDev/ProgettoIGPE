@@ -4,7 +4,7 @@ import java.awt.Rectangle;
 
 import application.config.Utilities;
 
-public class Paddle extends CommonVariable {
+public class Paddle extends CommonVariables {
 	
 	int speed;
 

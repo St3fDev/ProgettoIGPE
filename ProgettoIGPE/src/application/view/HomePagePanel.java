@@ -11,6 +11,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 
@@ -27,6 +28,7 @@ public class HomePagePanel extends JPanel {
 	public HomePagePanel() {
 		Image cursor = new ImageIcon(getClass().getResource("/application/resources/icons/cursor.png")).getImage();
 		setCursor(Toolkit.getDefaultToolkit().createCustomCursor(cursor, new Point(0,0), ""));
+		
 		startButton = new JButton();
 		settingsButton = new JButton();
 		exitButton = new JButton();
@@ -50,7 +52,7 @@ public class HomePagePanel extends JPanel {
 			background = ImageIO.read(getClass().getResourceAsStream("/application/resources/backgrounds/start.png"));
 			g2d.drawImage(background, 0, 0, null);
 		} catch (IOException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "errore nella gestione dell'immagine start.png", "ERRORE", JOptionPane.ERROR_MESSAGE);
 		}
 	}	
 	

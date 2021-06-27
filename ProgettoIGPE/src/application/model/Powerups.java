@@ -4,7 +4,7 @@ import java.awt.Rectangle;
 
 import application.config.Utilities;
 
-public class Powerups extends CommonVariable {
+public class Powerups extends CommonVariables {
 	int speed;
 	int power;
 	

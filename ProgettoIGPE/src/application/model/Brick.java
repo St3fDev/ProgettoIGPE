@@ -4,10 +4,10 @@ import java.awt.Rectangle;
 
 import application.config.Utilities;
 
-public class Brick extends CommonVariable {
+public class Brick extends CommonVariables {
 
-	int resistance;
-	int resistanceInit;  
+	int resistance;       // diminuisce ogni volta che avviene una collisione 
+	int resistanceInit;   // resta costante, identifica il tipo di muro 
 	Boolean destroyed;
 	
 	public Brick(int x, int y) {

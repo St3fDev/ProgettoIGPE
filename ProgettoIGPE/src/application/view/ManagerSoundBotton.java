@@ -1,7 +1,6 @@
-package application.controller;
+package application.view;
 
 import application.config.Utilities;
-import application.view.Sounds;
 
 public class ManagerSoundBotton {
 	
@@ -19,10 +18,6 @@ public class ManagerSoundBotton {
 		bottonEffect.reduceVolume();
 		if (Utilities.audioOn)
 			bottonEffect.start();
-	}
-	
-	public void SoundMenu() {
-		
 	}
 	
 }

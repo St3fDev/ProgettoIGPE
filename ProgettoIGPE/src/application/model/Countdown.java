@@ -5,8 +5,8 @@ import java.util.TimerTask;
 import application.config.Utilities;
 
 public class Countdown extends TimerTask {
-	int seconds;
-	int idx;
+	private int seconds;
+	private int idx;
 
 	public Countdown(int seconds, int idx) {
 		this.seconds = seconds;

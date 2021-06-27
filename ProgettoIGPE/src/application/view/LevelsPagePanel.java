@@ -12,6 +12,7 @@ import java.util.HashMap;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class LevelsPagePanel extends JPanel {
@@ -30,7 +31,7 @@ public class LevelsPagePanel extends JPanel {
 		for (int i = 0; i < 9; i++) {
 			JButton level = new JButton();
 			levels.put(i, level);
-			if (!LevelLocked.getIstance().readLevel(i)) {
+			if (!ManagerFile.getIstance().readLevel(i)) {
 				ImageLoader.getIstance().initLevelsButtonLock(level, 141, k + i * 83 + 130, i + 10);
 			}
 			else
@@ -55,7 +56,7 @@ public class LevelsPagePanel extends JPanel {
 			background = ImageIO.read(getClass().getResourceAsStream("/application/resources/backgrounds/levels.png"));
 			g2d.drawImage(background, 0, 0, null);
 		} catch (IOException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "errore nella gestione dell'immagine levels.png", "ERRORE", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

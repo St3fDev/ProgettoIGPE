@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 import application.config.Utilities;
 
@@ -25,7 +26,7 @@ public class PowerupsView extends Common {
 			slowPaddle_img = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/nerf_slowPaddle.png"));
 			fastBall_img = ImageIO.read(getClass().getResourceAsStream("/application/resources/icons/nerf_fastBall.png"));
 		} catch (IOException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "errore nella gestione delle icone dei power-ups", "ERRORE", JOptionPane.ERROR_MESSAGE);
 		} 
 	}
 }

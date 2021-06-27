@@ -2,17 +2,13 @@ package application.controller;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-
 import application.LevelsPage;
 import application.Main;
 import application.SettingsPage;
 import application.view.HomePagePanel;
 import application.view.ImageLoader;
+import application.view.ManagerSoundBotton;
 import application.view.Sounds;
 
 public class HomeController extends MouseAdapter {
@@ -47,7 +43,6 @@ public class HomeController extends MouseAdapter {
 			LevelsPage lp = new LevelsPage();
 		}
 		if (e.getSource() == settings) {
-			//Main.startPage.setVisible(false);
 			ManagerSoundBotton.getIstance().pressBotton();
 			Main.startPage.setEnabled(false);
 			SettingsPage sp = new SettingsPage();

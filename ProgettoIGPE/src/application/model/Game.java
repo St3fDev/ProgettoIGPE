@@ -1,13 +1,13 @@
 package application.model;
 
 import java.awt.Point;
-import java.util.ArrayList;
+import java.util.Vector;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Timer;
 
 import application.config.Utilities;
-import application.view.LevelLocked;
+import application.view.ManagerFile;
 import application.view.Maps;
 import application.view.Sounds;
 
@@ -24,17 +24,17 @@ public class Game {
 	private int level;
 	private int lives;
 	private int score;
+	private int count_sound;
 	private Paddle paddle;
 	private Ball ball;
-	private ArrayList<Brick> bricks;
-	private ArrayList<Powerups> pwr;
-	private ArrayList<Boolean> pwrActivated;
-	private ArrayList<Integer> pwrDuration;
-	private ArrayList<Boolean> managerTimePwr;
-	private HashMap<Integer, Boolean> lightOn;
-	private ArrayList<Integer> positionLight;
+	private Vector<Brick> bricks;
+	private Vector<Powerups> pwr;
+	private Vector<Boolean> pwrActivated;
+	private Vector<Integer> pwrDuration;
+	private Vector<Boolean> managerTimePwr;
+	private Vector<Integer> positionLight;
+	private HashMap<Integer, Boolean> lightOff;
 	private Sounds sound;
-	private Timer timer;
 	private Sounds loseLife;
 	private Sounds paddleSound;
 	private Sounds gameOver;
@@ -43,7 +43,8 @@ public class Game {
 	private Sounds block_hit2;
 	private Sounds power_up;
 	private Sounds nerf;
-	private int count_sound;
+	private Timer timer;
+
 	
 	public static Game getInstance() {
 		if (game == null)
@@ -52,6 +53,29 @@ public class Game {
 	}
 
 	private Game() {
+		pause = true;
+		lose = false;
+		won = false;
+		levelUp = false;
+		bricks = new Vector<Brick>();
+		pwr = new Vector<Powerups>();
+		pwrActivated = new Vector<Boolean>();
+		pwrDuration = new Vector<Integer>();
+		managerTimePwr = new Vector<Boolean>();
+		positionLight = new Vector<Integer>();
+		lightOff = new HashMap<Integer, Boolean>();
+		lives = 3;
+		score = 0;
+		count_sound = 0;
+		velBall = 9;
+		timer = new Timer();
+		initAllSound();
+		initPaddle();
+		initBall();
+		setPwr();
+	}
+	
+	private void initAllSound() {
 		sound = new Sounds("levelCompleted.wav");
 		loseLife = new Sounds("loseLife.wav");
 		paddleSound = new Sounds("paddle.wav");
@@ -61,33 +85,26 @@ public class Game {
 		block_hit2 = new Sounds("block_hit.wav");
 		power_up = new Sounds("power-ups.wav");
 		nerf = new Sounds("nerf.wav");
+	}
+	
+	private void initPaddle() {
 		paddle = new Paddle();
 		paddle.x = Utilities.WIDTH_SIZE / 2 - Utilities.DIM_X_PADDLE / 2;
 		paddle.y = Utilities.HEIGHT_SIZE - 120;
 		firstHalfPaddle = 30;
 		paddle.speed = 25;
 		widthPaddle = 0;
+	}
+	
+	private void initBall() {
 		ball = new Ball();
 		ball.x = Utilities.WIDTH_SIZE / 2 - Utilities.DIM_BALL / 2;
 		ball.y = Utilities.HEIGHT_SIZE - 140;
 		ball.dirX = -1;
 		ball.dirY = -1;
-		pause = true;
-		lose = false;
-		won = false;
-		levelUp = false;
-		bricks = new ArrayList<Brick>();
-		pwr = new ArrayList<Powerups>();
-		pwrActivated = new ArrayList<Boolean>();
-		pwrDuration = new ArrayList<Integer>();
-		managerTimePwr = new ArrayList<Boolean>();
-		lightOn = new HashMap<Integer, Boolean>();
-		positionLight = new ArrayList<Integer>();
-		lives = 3;
-		score = 0;
-		count_sound = 0;
-		velBall = 9;
-		timer = new Timer();
+	}
+	
+	private void setPwr() {
 		for (int i = 0; i < 6; i++) {
 			pwrDuration.add(5);
 			pwrActivated.add(false);
@@ -158,7 +175,7 @@ public class Game {
 	}
 
 	public void ballCollision() {
-		if (ball.getRect().getMaxY() > Utilities.LIMIT_LINE) {
+		if (ball.getRect().getMaxY() > Utilities.LIMIT_LINE) { 
 			lives--;
 			if (lives == 0) {
 				lose = true;
@@ -227,7 +244,6 @@ public class Game {
 				Point pointR_B = new Point(ballLeft + ballWidth + 1, ballTop + ballHeight); 
 				Point pointL = new Point(ballLeft - 1, ballTop);
 				Point pointT = new Point(ballLeft, ballTop - 1);
-				Point pointT_R = new Point(ballLeft + ballWidth, ballTop - 1);
 				Point pointB = new Point(ballLeft, ballTop + ballHeight + 1);
 				
 				if (!bricks.get(i).getDestroyed()) {
@@ -252,7 +268,7 @@ public class Game {
 						}
 						if (bricks.get(i).resistance < 4)
 							bricks.get(i).resistance--;
-						if (bricks.get(i).getRect().contains(pointR))
+						if (bricks.get(i).getRect().contains(pointR)) 
 							ball.dirX = -1;
 						else if (bricks.get(i).getRect().contains(pointL))
 							ball.dirX = 1;
@@ -264,6 +280,8 @@ public class Game {
 							ball.dirY = -1;
 						else if (bricks.get(i).getRect().contains(pointR_B))
 							ball.dirX = -1;
+						
+						// il brick di resistenza 4 non si distrugge, cambia stato (acceso/spento)
 						if (bricks.get(i).resistance == 4) {
 							bricks.get(i).resistance++;
 							setLight(i, true);
@@ -275,28 +293,29 @@ public class Game {
 					}
 				}
 				if (level == 8) {
-					if (lightOn.get(positionLight.get(0)) && lightOn.get(positionLight.get(1))) {
+					// quando entrambi i brick di livello 4 sono spenti, il gioco finisce 
+					if (lightOff.get(positionLight.get(0)) && lightOff.get(positionLight.get(1))) {
 						win_sound.start();
 						won = true;
-						LevelLocked.getIstance().setAllUnlocked();
+						ManagerFile.getIstance().setAllUnlocked();
 					}
 				}
 			}
 		}
 	}
-
+	
 	public void setLight(int value, boolean state) {
 		if (value == positionLight.get(0))
-			lightOn.replace(positionLight.get(0), state);
+			lightOff.replace(positionLight.get(0), state);
 		else if (value == positionLight.get(1))
-			lightOn.replace(positionLight.get(1), state);
+			lightOff.replace(positionLight.get(1), state);
 	}
-
+	
 	public void addPwr(Brick b) {
 		for (int i = 0; i < pwrActivated.size(); i++) {
 			if (pwrActivated.get(i)) {
 				Powerups p = new Powerups();
-				p.x = b.x + Utilities.DIM_X_BRICK / 2;
+				p.x = b.x + Utilities.DIM_X_BRICK / 2 - Utilities.DIM_X_PWR / 2;
 				p.y = b.y;
 				p.speed = 10;
 				p.setPower(i);
@@ -322,18 +341,14 @@ public class Game {
 						if (lives < 5)
 							lives++;
 					}
-					if (pwr.get(i).getPower() == Utilities.PWR_LARGE_PADDLE
-							&& !managerTimePwr.get(Utilities.PWR_LARGE_PADDLE))
-						timer.schedule(new Countdown(pwrDuration.get(pwr.get(i).power), Utilities.PWR_LARGE_PADDLE), 0,
-								1000);
+					if (pwr.get(i).getPower() == Utilities.PWR_LARGE_PADDLE && !managerTimePwr.get(Utilities.PWR_LARGE_PADDLE))
+						timer.schedule(new Countdown(pwrDuration.get(pwr.get(i).power), Utilities.PWR_LARGE_PADDLE), 0, 1000);
 
 					if (pwr.get(i).getPower() == Utilities.PWR_FIREBALL && !managerTimePwr.get(Utilities.PWR_FIREBALL))
-						timer.schedule(new Countdown(pwrDuration.get(pwr.get(i).power), Utilities.PWR_FIREBALL), 0,
-								1000);
+						timer.schedule(new Countdown(pwrDuration.get(pwr.get(i).power), Utilities.PWR_FIREBALL), 0, 1000);
 
 					if (pwr.get(i).getPower() == Utilities.NERF_VEL_PADDLE)
-						timer.schedule(new Countdown(pwrDuration.get(pwr.get(i).power), Utilities.NERF_VEL_PADDLE), 0,
-								1000);
+						timer.schedule(new Countdown(pwrDuration.get(pwr.get(i).power), Utilities.NERF_VEL_PADDLE), 0, 1000);
 
 					if (pwr.get(i).getPower() == Utilities.NERF_VEL_BALL)
 						velBall = 12;
@@ -355,7 +370,7 @@ public class Game {
 					Brick b = new Brick(j * Utilities.DIM_X_BRICK, i * Utilities.DIM_Y_BRICK);
 					bricks.add(b);
 					if (level[i][j] == Utilities.BRICK_LIGHT) {
-						lightOn.put(k, false);
+						lightOff.put(k, false);
 						positionLight.add(k);
 					}
 					bricks.get(k).resistance = level[i][j];
@@ -371,20 +386,20 @@ public class Game {
 		int rand = r.nextInt(100) + 1;
 		int spawn = 0;
 		if (level > 5)
-			spawn = 20;
+			spawn = 15;
 		if (rand <= 2 && level < 6 && lives < 5)
 			pwrActivated.set(Utilities.PWR_LIFE, true);
 		
 		else if (rand > 3 && rand <= 8 && level != 8)
 			pwrActivated.set(Utilities.PWR_LARGE_PADDLE, true);
 		
-		else if (rand > 9 && rand <= 13 && level != 8)
+		else if (rand > 8 && rand <= 13 && level != 8)
 			pwrActivated.set(Utilities.PWR_FIREBALL, true);
 		
-		else if (rand > 13 && rand <= 17 + spawn)
+		else if (rand > 13 && rand <= 18 + spawn)
 			pwrActivated.set(Utilities.NERF_VEL_BALL, true);
 		
-		else if (rand > 18 + spawn && rand <= 23 + spawn)
+		else if (rand > 18 + spawn && rand <= 23 + spawn*2)
 			pwrActivated.set(Utilities.NERF_VEL_PADDLE, true);
 	}
 
@@ -417,7 +432,7 @@ public class Game {
 			ball.dirX = 1;
 	}
 	
-	public ArrayList<Brick> getBrick() {
+	public Vector<Brick> getBrick() {
 		return bricks;
 	}
 
@@ -429,8 +444,8 @@ public class Game {
 		return ball;
 	}
 
-	public void setPause(boolean p) {
-		pause = p;
+	public void setPause(boolean pause) {
+		this.pause = pause;
 	}
 
 	public boolean isPause() {
@@ -453,7 +468,7 @@ public class Game {
 		return score;
 	}
 
-	public ArrayList<Powerups> getPwr() {
+	public Vector<Powerups> getPwr() {
 		return pwr;
 	}
 
@@ -461,11 +476,11 @@ public class Game {
 		return bricks.size();
 	}
 
-	public void setManagerTimePwr(ArrayList<Boolean> managerTimePwr) {
+	public void setManagerTimePwr(Vector<Boolean> managerTimePwr) {
 		this.managerTimePwr = managerTimePwr;
 	}
 
-	public ArrayList<Boolean> getManagerTimePwr() {
+	public Vector<Boolean> getManagerTimePwr() {
 		return managerTimePwr;
 	}
 
